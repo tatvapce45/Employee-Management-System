@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "mwTRqgu7cEBhRrvdk3poWfCiZpCHXgUfLcPn4T6CR2o=",
+  "Source": "EmployeeManagementSystem.Web",
+  "BasePath": "_content/EmployeeManagementSystem.Web",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
