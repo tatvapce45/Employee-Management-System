@@ -1,3 +1,5 @@
+using AutoMapper;
+using OfficeOpenXml;
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Results;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
@@ -6,10 +8,12 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IGenericRepository<Employee> employeeGenericRepository) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IMapper mapper) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
+        private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
         private readonly IGenericRepository<Employee> _employeeGenericRepository = employeeGenericRepository;
+        private readonly IMapper _mapper = mapper;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
             try
@@ -46,19 +50,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 {
                     if (result.Data != null)
                     {
-                        Employee employee = result.Data!;
-                        EmployeeDto employeeDto = new()
-                        {
-                            Id = employee.Id,
-                            Name = employee.Name,
-                            DepartmentId = employee.DepartmentId,
-                            Email = employee.Email,
-                            MobileNo = employee.MobileNo,
-                            Gender = employee.Gender,
-                            Age = employee.Age,
-                            HiringDate = employee.HiringDate,
-                            UpdatedAt = employee.UpdatedAt
-                        };
+                        var employeeDto = _mapper.Map<EmployeeDto>(result.Data);
                         return ServiceResult<EmployeeDto>.Ok(employeeDto);
                     }
                     else
@@ -81,41 +73,29 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         {
             try
             {
-                bool ifAlreadyExists = await _employeesRepository.CheckIfExists(createEmployeeDto.Email, createEmployeeDto.MobileNo);
-                if (ifAlreadyExists)
+                bool ifDepartmentExists = await _departmentsRepository.CheckIfExists(createEmployeeDto.DepartmentId);
+                if (!ifDepartmentExists)
                 {
-                    return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
+                    return ServiceResult<EmployeeDto>.BadRequest("Department with provided id does not exist!");
                 }
                 else
                 {
-                    Employee employee = new()
+                    bool ifAlreadyExists = await _employeesRepository.CheckIfExists(createEmployeeDto.Email, createEmployeeDto.MobileNo);
+                    if (ifAlreadyExists)
                     {
-                        Email = createEmployeeDto.Email,
-                        Name = createEmployeeDto.Name,
-                        Gender = createEmployeeDto.Gender,
-                        Age = createEmployeeDto.Age,
-                        DepartmentId = createEmployeeDto.DepartmentId,
-                        MobileNo = createEmployeeDto.MobileNo,
-                        HiringDate = DateTime.Now
-                    };
+                        return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
+                    }
+
+                    var employee = _mapper.Map<Employee>(createEmployeeDto);
+
                     var result = await _employeeGenericRepository.AddAsync(employee);
                     if (!result.Success)
                     {
                         return ServiceResult<EmployeeDto>.InternalError($"Failed to register user: {result.ErrorMessage}");
                     }
 
-                    EmployeeDto employeeDto = new()
-                    {
-                        Id = employee.Id,
-                        Name = createEmployeeDto.Name,
-                        Email = createEmployeeDto.Email,
-                        MobileNo = createEmployeeDto.MobileNo,
-                        Gender = createEmployeeDto.Gender,
-                        Age = createEmployeeDto.Age,
-                        DepartmentId = createEmployeeDto.DepartmentId,
-                        HiringDate = DateTime.Now
-                    };
-                    return ServiceResult<EmployeeDto>.Created(employeeDto, "User registered successfully.");
+                    var employeeDto = _mapper.Map<EmployeeDto>(employee);
+                    return ServiceResult<EmployeeDto>.Created(null, "User registered successfully.");
                 }
             }
             catch (Exception ex)
@@ -128,61 +108,47 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         {
             try
             {
-                bool ifAlreadyExists = await _employeesRepository.CheckIfExistsWithDifferentId(updateEmployeeDto.Id, updateEmployeeDto.Email, updateEmployeeDto.MobileNo);
-                if (ifAlreadyExists)
+                bool ifDepartmentExists = await _departmentsRepository.CheckIfExists(updateEmployeeDto.DepartmentId);
+                if (!ifDepartmentExists)
                 {
-                    return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
+                    return ServiceResult<EmployeeDto>.BadRequest("Department with provided id does not exist!");
                 }
                 else
                 {
-                    var result = await _employeeGenericRepository.GetById(updateEmployeeDto.Id);
-                    if (result.Success)
+                    bool ifAlreadyExists = await _employeesRepository.CheckIfExistsWithDifferentId(updateEmployeeDto.Id, updateEmployeeDto.Email, updateEmployeeDto.MobileNo);
+                    if (ifAlreadyExists)
                     {
-                        if (result.Data != null)
-                        {
-                            Employee employee = result.Data;
-                            employee.Email = updateEmployeeDto.Email;
-                            employee.MobileNo = updateEmployeeDto.MobileNo;
-                            employee.Gender = updateEmployeeDto.Gender;
-                            employee.Age = updateEmployeeDto.Age;
-                            employee.DepartmentId = updateEmployeeDto.DepartmentId;
-                            employee.UpdatedAt = DateTime.Now;
-                            employee.Name = updateEmployeeDto.Name;
-                            var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
-                            if (updateResult.Success)
-                            {
-                                EmployeeDto employeeDto = new()
-                                {
-                                    Id = employee.Id,
-                                    Name = employee.Name,
-                                    Email = employee.Email,
-                                    MobileNo = employee.MobileNo,
-                                    Gender = employee.Gender,
-                                    Age = employee.Age,
-                                    DepartmentId = employee.DepartmentId,
-                                    HiringDate = employee.HiringDate
-                                };
-                                return ServiceResult<EmployeeDto>.Ok(employeeDto, "Employee updated successfully.");
-                            }
-                            else
-                            {
-                                return ServiceResult<EmployeeDto>.InternalError("Error updating employee", new Exception(updateResult.ErrorMessage));
-                            }
-                        }
-                        else
-                        {
-                            return ServiceResult<EmployeeDto>.BadRequest("Employee not found!");
-                        }
+                        return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
                     }
-                    else
+
+                    var result = await _employeeGenericRepository.GetById(updateEmployeeDto.Id);
+                    if (!result.Success)
                     {
                         return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while fetching employee.", new Exception(result.ErrorMessage));
                     }
+
+                    if (result.Data == null)
+                    {
+                        return ServiceResult<EmployeeDto>.BadRequest("Employee not found!");
+                    }
+
+                    Employee employee = result.Data;
+                    _mapper.Map(updateEmployeeDto, employee);
+                    employee.UpdatedAt = DateTime.Now;
+
+                    var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
+                    if (!updateResult.Success)
+                    {
+                        return ServiceResult<EmployeeDto>.InternalError("Error updating employee", new Exception(updateResult.ErrorMessage));
+                    }
+
+                    EmployeeDto employeeDto = _mapper.Map<EmployeeDto>(updateResult.Data);
+                    return ServiceResult<EmployeeDto>.Ok(null, "Employee updated successfully.");
                 }
             }
             catch (Exception ex)
             {
-                return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while fetching employee.", ex);
+                return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while updating employee.", ex);
             }
         }
 
@@ -211,6 +177,94 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             catch (Exception ex)
             {
                 return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while deleting employee.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<object>> GenerateEmployeesReport(int departnemtId, string? fromDate, string? toDate, string? gender, int? age)
+        {
+            try
+            {
+                DateOnly? from = string.IsNullOrWhiteSpace(fromDate) ? null : DateOnly.Parse(fromDate);
+                DateOnly? to = string.IsNullOrWhiteSpace(toDate) ? null : DateOnly.Parse(toDate);
+                var result = await _employeesRepository.GetEmployeesForReport(departnemtId, from, to, gender, age);
+                int totalEmployees = 0;
+
+                if (result == null || result.Count == 0)
+                {
+                    return ServiceResult<object>.NotFound("No employees found for the given criteria.");
+                }
+                else
+                {
+                    totalEmployees = result.Count;
+                    decimal averageSalary = result.Select(h => h.Salary).Average();
+                    var report = new
+                    {
+                        Employees = result,
+                        TotalEmployees = totalEmployees,
+                        AverageSalary = averageSalary
+                    };
+                    return ServiceResult<object>.Ok(report, "Employees report generated successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<object>.InternalError("An unexpected error occurred while generating report.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<byte[]>> GenerateEmployeesReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age)
+        {
+            try
+            {
+                var reportResult = await GenerateEmployeesReport(departmentId, fromDate, toDate, gender, age);
+
+                if (!reportResult.Success || reportResult.Data == null)
+                {
+                    return ServiceResult<byte[]>.NotFound("No employees found for the given criteria.");
+                }
+
+                dynamic report = reportResult.Data;
+                var employees = ((IEnumerable<dynamic>)report.Employees).ToList();
+
+
+                using var package = new ExcelPackage();
+                var worksheet = package.Workbook.Worksheets.Add("Employees Report");
+
+                worksheet.Cells[1, 1].Value = "Employee Id";
+                worksheet.Cells[1, 2].Value = "Name";
+                worksheet.Cells[1, 3].Value = "Gender";
+                worksheet.Cells[1, 4].Value = "Age";
+                worksheet.Cells[1, 5].Value = "Salary";
+                int row = 2;
+                foreach (var emp in employees)
+                {
+                    worksheet.Cells[row, 1].Value = emp.Id;
+                    worksheet.Cells[row, 2].Value = emp.Name;
+                    worksheet.Cells[row, 3].Value = emp.Gender;
+                    worksheet.Cells[row, 4].Value = emp.Age;
+                    worksheet.Cells[row, 5].Value = emp.Salary;
+                    row++;
+                }
+
+                worksheet.Cells[row + 1, 1].Value = "Total Employees:";
+                worksheet.Cells[row + 1, 2].Value = report.TotalEmployees;
+
+                worksheet.Cells[row + 2, 1].Value = "Average Salary:";
+                worksheet.Cells[row + 2, 2].Value = report.AverageSalary;
+
+                using (var range = worksheet.Cells[1, 1, 1, 5])
+                {
+                    range.Style.Font.Bold = true;
+                }
+
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                var excelBytes = package.GetAsByteArray();
+
+                return ServiceResult<byte[]>.Ok(excelBytes, "Excel report generated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<byte[]>.InternalError("Failed to generate Excel report.", ex);
             }
         }
     }

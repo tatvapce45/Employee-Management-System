@@ -38,9 +38,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public int CityId { get; set; }
 
         [Required]
-        public bool IsAdd{get;set;}=true;
-
-        [Required]
         public int RoleId { get; set; }
     }
 }

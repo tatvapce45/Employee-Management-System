@@ -12,8 +12,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         public DateTime? UpdatedAt { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public int DepartmentId { get; set; }
 
         public string Email { get; set; } = null!;
@@ -23,6 +21,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public string Gender { get; set; } = null!;
 
         public int Age { get; set; }
+
+        public decimal Salary { get; set; }
     }
 
     public class CreateEmployeeDto
@@ -44,6 +44,9 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         [Required]
         public int Age { get; set; }
+
+        [Required]
+        public decimal Salary { get; set; }
     }
 
     public class UpdateEmployeeDto
@@ -52,8 +55,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         [Required]
         public required string Name { get; set; }
-
-        public bool IsDeleted { get; set; }
 
         [Required]
         public int DepartmentId { get; set; }
@@ -69,5 +70,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         [Required]
         public int Age { get; set; }
+
+        [Required]
+        public decimal Salary { get; set; }
     }
 }

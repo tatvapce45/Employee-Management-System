@@ -27,6 +27,11 @@ namespace EmployeeManagementSystem.BusinessLogic.DtoValidators
             RuleFor(x => x.Age)
                 .NotNull().WithMessage("Employee age can not be null!")
                 .GreaterThan(18).WithMessage("Employee age must be greater than 18!");
+
+            RuleFor(x => x.Salary)
+                .NotNull().WithMessage("Employee salary can not be null!")
+                .GreaterThan(0).WithMessage("Employee salary must be greater than 0!")
+                .LessThanOrEqualTo(10000000).WithMessage("Employee salary must be less than or equal to 10,000,000!");
         }
     }
 
@@ -58,6 +63,11 @@ namespace EmployeeManagementSystem.BusinessLogic.DtoValidators
             RuleFor(x => x.Age)
                 .NotNull().WithMessage("Employee age can not be null!")
                 .GreaterThan(0).WithMessage("Employee age must be greater than 18!");
+
+            RuleFor(x => x.Salary)
+                .NotNull().WithMessage("Employee salary can not be null!")
+                .GreaterThan(0).WithMessage("Employee salary must be greater than 0!")
+                .LessThanOrEqualTo(10000000).WithMessage("Employee salary must be less than or equal to 10,000,000!");
         }
     }
 }

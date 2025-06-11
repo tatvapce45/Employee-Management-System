@@ -39,6 +39,8 @@ public partial class User
 
     public virtual Country Country { get; set; } = null!;
 
+    public virtual ICollection<Refreshtoken> Refreshtokens { get; set; } = new List<Refreshtoken>();
+
     public virtual Role Role { get; set; } = null!;
 
     public virtual State State { get; set; } = null!;

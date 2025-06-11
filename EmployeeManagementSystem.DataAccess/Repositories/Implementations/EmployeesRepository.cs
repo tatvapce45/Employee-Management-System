@@ -15,14 +15,30 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
             return await _genericRepository.GetAsync(pageNumber, pageSize, sortBy, sortOrder, searchTerm, filter, e => e.Name, e => e.Department.Name, e => e.Id.ToString());
         }
 
-        public async Task<bool> CheckIfExists(string email,string mobileNo)
+        public async Task<bool> CheckIfExists(string email, string mobileNo)
         {
-            return await _context.Employees.AnyAsync(e=>e.Email==email || e.MobileNo==mobileNo);
+            return await _context.Employees.AnyAsync(e => e.Email == email || e.MobileNo == mobileNo);
         }
 
-        public async Task<bool> CheckIfExistsWithDifferentId(int employeeId,string email,string mobileNo)
+        public async Task<bool> CheckIfExistsWithDifferentId(int employeeId, string email, string mobileNo)
         {
-            return await _context.Employees.AnyAsync(e =>e.Id!=employeeId && (e.Email==email || e.MobileNo==mobileNo));
+            return await _context.Employees.AnyAsync(e => e.Id != employeeId && (e.Email == email || e.MobileNo == mobileNo));
         }
+
+        public async Task<List<Employee>> GetEmployeesForReport(int departmentId, DateOnly? fromDate, DateOnly? toDate, string? gender, int? age)
+        {
+            var from = fromDate?.ToDateTime(TimeOnly.MinValue);
+            var to = toDate?.ToDateTime(TimeOnly.MaxValue);
+
+            return await _context.Employees
+                .Where(e =>
+                    e.DepartmentId == departmentId &&
+                    (!fromDate.HasValue || e.HiringDate >= from) &&
+                    (!toDate.HasValue || e.HiringDate <= to) &&
+                    (string.IsNullOrEmpty(gender) || e.Gender == gender) &&
+                    (!age.HasValue || e.Age == age.Value))
+                .ToListAsync();
+        }
+
     }
 }

@@ -14,5 +14,9 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
         Task<ServiceResult<EmployeeDto>> UpdateEmployee(UpdateEmployeeDto updateEmployeeDto);
 
         Task<ServiceResult<EmployeeDto>> DeleteEmployee(int employeeId);
+
+        Task<ServiceResult<object>> GenerateEmployeesReport(int departnemtId,string? fromDate, string? toDate,string? gender,int? age);
+
+        Task<ServiceResult<byte[]>> GenerateEmployeesReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age);
     }
 }

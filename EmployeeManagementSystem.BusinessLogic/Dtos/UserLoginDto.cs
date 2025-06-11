@@ -11,7 +11,5 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public required string Password { get; set; }
 
         public bool RememberMe { get; set; }=false;
-
-        public string JwtToken{get;set;}=string.Empty;
     }
 }

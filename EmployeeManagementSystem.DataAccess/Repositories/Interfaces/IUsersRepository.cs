@@ -4,6 +4,8 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
 {
     public interface IUsersRepository
     {
-        Task<User?> GetUser(string email);
+        Task<User?> GetUserByEmail(string email);
+
+        Task<User?> GetUserById(int id);
     }
 }

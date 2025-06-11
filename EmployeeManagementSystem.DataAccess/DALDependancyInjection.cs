@@ -13,6 +13,8 @@ namespace EmployeeManagementSystem.DataAccess
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
+            services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             return services;
         }
 

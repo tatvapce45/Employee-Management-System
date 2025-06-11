@@ -23,6 +23,8 @@ public partial class EmployeeManagementSystemContext : DbContext
 
     public virtual DbSet<Employee> Employees { get; set; }
 
+    public virtual DbSet<Refreshtoken> Refreshtokens { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<State> States { get; set; }
@@ -108,6 +110,9 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(60)
                 .HasColumnName("name");
+            entity.Property(e => e.Salary)
+                .HasPrecision(10, 2)
+                .HasColumnName("salary");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");
@@ -116,6 +121,29 @@ public partial class EmployeeManagementSystemContext : DbContext
                 .HasForeignKey(d => d.DepartmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("employees_department_id_fkey");
+        });
+
+        modelBuilder.Entity<Refreshtoken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("refreshtoken_pkey");
+
+            entity.ToTable("refreshtoken");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Expires)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("expires");
+            entity.Property(e => e.IsRevoked).HasColumnName("is_revoked");
+            entity.Property(e => e.IsUsed).HasColumnName("is_used");
+            entity.Property(e => e.Token)
+                .HasColumnType("character varying")
+                .HasColumnName("token");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Refreshtokens)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("refreshtoken_user_id_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>

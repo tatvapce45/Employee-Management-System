@@ -7,9 +7,14 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
     {
         private readonly EmployeeManagementSystemContext _context = context;
 
-        public async Task<User?> GetUser(string email)
+        public async Task<User?> GetUserByEmail(string email)
         {
             return await _context.Users.Include(u=>u.Role).FirstOrDefaultAsync(h => h.Email == email);
+        }
+
+        public async Task<User?> GetUserById(int id)
+        {
+            return await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(h => h.Id == id);
         }
     }
 }

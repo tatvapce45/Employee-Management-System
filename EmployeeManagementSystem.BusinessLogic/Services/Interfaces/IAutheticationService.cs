@@ -7,6 +7,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
     {
         Task<ServiceResult<UserRegistrationDto>> RegisterUser(UserRegistrationDto userRegistrationDto);
 
-        Task<ServiceResult<UserLoginDto>> Login(UserLoginDto userLoginDto);
+        Task<ServiceResult<string>> Login(UserLoginDto userLoginDto);
+
+        Task<ServiceResult<TokensDto>> VerifyOtp(string email, string submittedOtp);
     }
 }
