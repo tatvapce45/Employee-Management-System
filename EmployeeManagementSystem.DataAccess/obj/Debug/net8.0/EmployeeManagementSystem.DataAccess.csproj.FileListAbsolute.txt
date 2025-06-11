@@ -7,6 +7,7 @@ C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataA
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.AssemblyInfoInputs.cache
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.AssemblyInfo.cs
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.sourcelink.json
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\refint\EmployeeManagementSystem.DataAccess.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.DataAccess\obj\Debug\net8.0\EmployeeManagementSystem.DataAccess.pdb

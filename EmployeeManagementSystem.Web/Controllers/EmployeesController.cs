@@ -83,5 +83,22 @@ namespace EmployeeManagementSystem.Web.Controllers
                 ExceptionStackTrace = result.Exception?.StackTrace
             });
         }
+
+        [HttpDelete("Employee")]
+        public async Task<IActionResult> DeleteEmployee(int employeeId)
+        {
+            var result = await _employeeService.DeleteEmployee(employeeId);
+            if (result.Success)
+            {
+                return StatusCode(result.StatusCode, new { result.Message });
+            }
+            return StatusCode(result.StatusCode, new
+            {
+                result.Message,
+                result.ValidationErrors,
+                ExceptionMessage = result.Exception?.Message,
+                ExceptionStackTrace = result.Exception?.StackTrace
+            });
+        }
     }
 }

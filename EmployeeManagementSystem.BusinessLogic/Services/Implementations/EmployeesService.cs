@@ -186,10 +186,32 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             }
         }
 
-        // public async Task<ServiceResult<EmployeeDto>> DeleteEmployee(int employeeId)
-        // {
-        //     try
-            
-        // }
+        public async Task<ServiceResult<EmployeeDto>> DeleteEmployee(int employeeId)
+        {
+            try
+            {
+                var result = await _employeeGenericRepository.GetById(employeeId);
+                if (result.Data == null)
+                {
+                    return ServiceResult<EmployeeDto>.NotFound("Employee with provided id not found!");
+                }
+                else
+                {
+                    var deleteResult = await _employeeGenericRepository.DeleteAsync(result.Data);
+                    if (deleteResult.Success)
+                    {
+                        return ServiceResult<EmployeeDto>.Ok(null, "Employee deleted successfully.");
+                    }
+                    else
+                    {
+                        return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while deleting employee.", new Exception(deleteResult.ErrorMessage));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while deleting employee.", ex);
+            }
+        }
     }
 }

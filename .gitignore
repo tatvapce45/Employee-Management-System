@@ -1,0 +1,49 @@
+# Build folders
+bin/
+obj/
+TestResults/
+
+# Rider & VS Code
+.idea/
+.vscode/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+Icon?
+
+# Secrets
+secrets.json
+*.env
+.env.*
+
+# DotNet CLI
+*.dbmdl
+
+# Publish output
+wwwroot/images/temp/
+
+# Others
+*.tlog
+*.tmp
+*.docstates
+
+# Ignore MSBuild and Visual Studio build cache files
+*.assets.cache
+*.csproj.FileListAbsolute.txt

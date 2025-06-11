@@ -6,6 +6,7 @@ C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Busin
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.csproj.AssemblyReference.cache
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.csproj.CoreCompileInputs.cache
+C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.sourcelink.json
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.csproj.CopyComplete
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\EmployeeManagementSystem.BusinessLogic.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.BusinessLogic\obj\Debug\net8.0\refint\EmployeeManagementSystem.BusinessLogic.dll
