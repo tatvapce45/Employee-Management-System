@@ -10,7 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class AuthenticationService(IGenericRepository<User> genericUserRepository, IUsersRepository usersRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache,IMapper mapper) : IAuthenticationService
+    public class AuthenticationService(IGenericRepository<User> genericUserRepository, IUsersRepository usersRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
     {
         private readonly IGenericRepository<User> _genericUserRepository = genericUserRepository;
         private readonly IUsersRepository _usersRepository = usersRepository;
@@ -30,7 +30,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     return ServiceResult<UserRegistrationDto>.BadRequest("User with this email already exists.");
                 }
                 userRegistrationDto.Password = _hashHelper.Encrypt(userRegistrationDto.Password);
-                User user=_mapper.Map<User>(userRegistrationDto);
+                User user = _mapper.Map<User>(userRegistrationDto);
                 RepositoryResult<User> result = await _genericUserRepository.AddAsync(user);
                 if (!result.Success)
                 {
@@ -62,7 +62,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 _memoryCache.Set($"OTP_{existingUser.Email}", otpCode, TimeSpan.FromMinutes(5));
                 string htmlBody = $"<p>Your OTP code is: <strong>{otpCode}</strong></p>";
                 await _emailSender.SendAsync(existingUser.Email, "Your OTP Code", otpCode, htmlBody);
-                return ServiceResult<string>.Ok("OTP sent to your email.");
+                return ServiceResult<string>.Ok(null,"OTP sent to your email.");
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             {
                 return ServiceResult<TokensDto>.NotFound("User not found.");
             }
-            var tokens = await _tokenService.GenerateTokensAsync(user);
+            var tokens = await _tokenService.GenerateTokens(user);
             var accessToken = tokens.Data?.GetType().GetProperty("AccessToken")?.GetValue(tokens.Data, null)?.ToString();
             var refreshToken = tokens.Data?.GetType().GetProperty("RefreshToken")?.GetValue(tokens.Data, null)?.ToString();
             if (accessToken != null && refreshToken != null)

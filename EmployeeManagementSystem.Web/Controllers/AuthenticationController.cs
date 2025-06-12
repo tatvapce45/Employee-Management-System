@@ -1,6 +1,7 @@
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Services.Implementations;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Web.Controllers
@@ -8,7 +9,7 @@ namespace EmployeeManagementSystem.Web.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(IAuthenticationService authenticationService,TokenService tokenService) : ControllerBase
+    public class AuthenticationController(IAuthenticationService authenticationService, TokenService tokenService) : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService = authenticationService;
         private readonly TokenService _tokenService = tokenService;
@@ -23,9 +24,9 @@ namespace EmployeeManagementSystem.Web.Controllers
             var result = await _authenticationService.RegisterUser(dto);
             if (result.Success)
             {
-                return StatusCode(result.StatusCode, new{result.Message,result.Success});
+                return StatusCode(result.StatusCode, new { result.Message, result.Success });
             }
-            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors,result.Success });
+            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors, result.Success });
         }
 
         [HttpPost("Login")]
@@ -37,9 +38,9 @@ namespace EmployeeManagementSystem.Web.Controllers
             var result = await _authenticationService.Login(userLoginDto);
             if (result.Success)
             {
-                return StatusCode(result.StatusCode, new { result.Message,result.Success });
+                return StatusCode(result.StatusCode, new { result.Message, result.Success });
             }
-            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors,result.Success });
+            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors, result.Success });
         }
 
         [HttpPost("Varify-OTP")]

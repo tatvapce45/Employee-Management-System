@@ -2,7 +2,7 @@ using AutoMapper;
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.DataAccess.Models;
 
-namespace EmployeeManagementSystem.BusinessLogic.AutoMapper
+namespace EmployeeManagementSystem.BusinessLogic.Mappers
 {
     public class UsersAutoMapper : Profile
     {

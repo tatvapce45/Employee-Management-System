@@ -250,7 +250,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 worksheet.Cells[row + 1, 2].Value = report.TotalEmployees;
 
                 worksheet.Cells[row + 2, 1].Value = "Average Salary:";
-                worksheet.Cells[row + 2, 2].Value = report.AverageSalary;
+                worksheet.Cells[row + 2, 2].Value = Math.Round(report.AverageSalary,2);
 
                 using (var range = worksheet.Cells[1, 1, 1, 5])
                 {

@@ -12,7 +12,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
         private readonly IUsersRepository _usersRepository = usersRepository;
 
-        public async Task<ServiceResult<object>> GenerateTokensAsync(User user)
+        public async Task<ServiceResult<object>> GenerateTokens(User user)
         {
             var accessToken = _jwtHelper.GenerateJWT(user);
 

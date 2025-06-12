@@ -1,4 +1,4 @@
-using EmployeeManagementSystem.BusinessLogic.AutoMapper;
+using EmployeeManagementSystem.BusinessLogic.Mappers;
 using EmployeeManagementSystem.BusinessLogic.Helpers;
 using EmployeeManagementSystem.BusinessLogic.Services.Implementations;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;

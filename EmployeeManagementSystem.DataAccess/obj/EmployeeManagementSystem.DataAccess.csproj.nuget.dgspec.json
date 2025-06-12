@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {}
+    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
+    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
+        "projectUniqueName": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
         "projectName": "EmployeeManagementSystem.DataAccess",
-        "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
+        "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
         "packagesPath": "C:\\Users\\pce45\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\obj\\",
+        "outputPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pce45\\AppData\\Roaming\\NuGet\\NuGet.Config"

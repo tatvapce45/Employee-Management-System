@@ -32,6 +32,7 @@ public partial class EmployeeManagementSystemContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=EmployeeManagementSystem;Username=postgres;password=Tatva@123");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -202,6 +203,9 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.Property(e => e.FirstName)
                 .HasMaxLength(30)
                 .HasColumnName("first_name");
+            entity.Property(e => e.GoogleUserId)
+                .HasColumnType("character varying")
+                .HasColumnName("google_user_id");
             entity.Property(e => e.LastName)
                 .HasMaxLength(30)
                 .HasColumnName("last_name");
@@ -211,7 +215,9 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.Property(e => e.Password)
                 .HasMaxLength(500)
                 .HasColumnName("password");
-            entity.Property(e => e.RoleId).HasColumnName("role_id");
+            entity.Property(e => e.RoleId)
+                .HasDefaultValue(3)
+                .HasColumnName("role_id");
             entity.Property(e => e.StateId).HasColumnName("state_id");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("timestamp without time zone")
@@ -225,12 +231,10 @@ public partial class EmployeeManagementSystemContext : DbContext
 
             entity.HasOne(d => d.City).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CityId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("users_city_id_fkey");
 
             entity.HasOne(d => d.Country).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CountryId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("users_country_id_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
@@ -240,7 +244,6 @@ public partial class EmployeeManagementSystemContext : DbContext
 
             entity.HasOne(d => d.State).WithMany(p => p.Users)
                 .HasForeignKey(d => d.StateId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("users_state_id_fkey");
         });
 
