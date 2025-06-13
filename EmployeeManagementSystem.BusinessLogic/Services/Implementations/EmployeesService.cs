@@ -250,7 +250,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 worksheet.Cells[row + 1, 2].Value = report.TotalEmployees;
 
                 worksheet.Cells[row + 2, 1].Value = "Average Salary:";
-                worksheet.Cells[row + 2, 2].Value = Math.Round(report.AverageSalary,2);
+                worksheet.Cells[row + 2, 2].Value = Math.Round(report.AverageSalary, 2);
 
                 using (var range = worksheet.Cells[1, 1, 1, 5])
                 {
@@ -265,6 +265,27 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             catch (Exception ex)
             {
                 return ServiceResult<byte[]>.InternalError("Failed to generate Excel report.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<DepartmentsDto>> GetDepartments()
+        {
+            try
+            {
+                var departments = await _departmentsRepository.GetAllDepartments();
+                if (departments == null || departments.Count == 0)
+                {
+                    return ServiceResult<DepartmentsDto>.NotFound("No departments found.");
+                }
+                var departmentsDto = new DepartmentsDto()
+                {
+                    Departments = departments
+                };
+                return ServiceResult<DepartmentsDto>.Ok(departmentsDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<DepartmentsDto>.InternalError("An unexpected error occurred while fetching departments.", ex);
             }
         }
     }

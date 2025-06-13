@@ -1,5 +1,6 @@
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
+using EmployeeManagementSystem.BusinessLogic.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,108 +16,98 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly IEmployeesService _employeeService = employeesService;
 
         [HttpPost("GetEmployees")]
-        [Authorize(Roles = "HR Manager,Admin")]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        // [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(ApiCommonResponse<List<EmployeeDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetEmployees([FromBody] EmployeesRequestDto employeesRequestDto)
         {
             var result = await _employeeService.GetEmployees(employeesRequestDto);
-            if (result.Success)
+            var response = new ApiCommonResponse<EmployeesResponseDto>
             {
-                return StatusCode(result.StatusCode, result.Data);
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("GetEmployeeById")]
         [Authorize]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetEmployee(int employeeId)
         {
             var result = await _employeeService.GetEmployee(employeeId);
-            if (result.Success)
+            var response = new ApiCommonResponse<EmployeeDto>
             {
-                return StatusCode(result.StatusCode, result.Data);
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("CreateEmployee")]
         [Authorize(Roles = "HR Manager,Admin")]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status201Created)]
         public async Task<IActionResult> AddEmployee([FromBody] CreateEmployeeDto createEmployeeDto)
         {
             var result = await _employeeService.AddEmployee(createEmployeeDto);
-            if (result.Success)
+            var response = new ApiCommonResponse<EmployeeDto>
             {
-                return StatusCode(result.StatusCode, new { result.Data, result.Message });
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPatch("UpdateEmployee")]
         [Authorize(Roles = "HR Manager,Admin")]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
             var result = await _employeeService.UpdateEmployee(updateEmployeeDto);
-            if (result.Success)
+            var response = new ApiCommonResponse<EmployeeDto>
             {
-                return StatusCode(result.StatusCode, new { result.Data, result.Message });
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("DeleteEmployee")]
         [Authorize(Roles = "HR Manager,Admin")]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ApiCommonResponse<string>), StatusCodes.Status200OK)]
         public async Task<IActionResult> DeleteEmployee(int employeeId)
         {
             var result = await _employeeService.DeleteEmployee(employeeId);
-            if (result.Success)
+            var response = new ApiCommonResponse<string>
             {
-                return StatusCode(result.StatusCode, new { result.Message });
-            }
-            return StatusCode(result.StatusCode, new
-            {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? "Employee deleted successfully." : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("GenerateReport")]
-        [ProducesResponseType(typeof(EmployeesResponseDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GenerateEmployeeReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age)
         {
             var result = await _employeeService.GenerateEmployeesReportExcel(departmentId, fromDate, toDate, gender, age);
@@ -124,16 +115,36 @@ namespace EmployeeManagementSystem.Web.Controllers
             if (result.Success)
             {
                 var fileName = $"EmployeesReport_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
-                return File(result.Data, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+                return File(result.Data!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
 
-            return StatusCode(result.StatusCode, new
+            var response = new ApiCommonResponse<object>
             {
-                result.Message,
-                result.ValidationErrors,
-                ExceptionMessage = result.Exception?.Message,
-                ExceptionStackTrace = result.Exception?.StackTrace
-            });
+                Success = false,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetDepartments")]
+        // [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(ApiCommonResponse<DepartmentsDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDepartments()
+        {
+            var result = await _employeeService.GetDepartments();
+            var response = new ApiCommonResponse<DepartmentsDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
     }
 }

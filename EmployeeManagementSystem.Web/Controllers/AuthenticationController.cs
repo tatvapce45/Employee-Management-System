@@ -1,12 +1,11 @@
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Services.Implementations;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
-using Google.Apis.Auth;
+using EmployeeManagementSystem.BusinessLogic.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementSystem.Web.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController(IAuthenticationService authenticationService, TokenService tokenService) : ControllerBase
@@ -15,46 +14,51 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly TokenService _tokenService = tokenService;
 
         [HttpPost("Register")]
-        [ProducesResponseType(typeof(UserRegistrationDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto dto)
         {
             var result = await _authenticationService.RegisterUser(dto);
-            if (result.Success)
+            var response = new ApiCommonResponse<UserRegistrationDto>
             {
-                return StatusCode(result.StatusCode, new { result.Message, result.Success });
-            }
-            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors, result.Success });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? dto : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("Login")]
-        [ProducesResponseType(typeof(UserLoginDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             var result = await _authenticationService.Login(userLoginDto);
-            if (result.Success)
+            var response = new ApiCommonResponse<UserLoginDto>
             {
-                return StatusCode(result.StatusCode, new { result.Message, result.Success });
-            }
-            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors, result.Success });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? userLoginDto : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
-        [HttpPost("Varify-OTP")]
-        [ProducesResponseType(typeof(UserLoginDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> VerifyOtp(string email, string otp)
+        [HttpPost("Verify-OTP")]
+        public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
         {
             var result = await _authenticationService.VerifyOtp(email, otp);
-            if (result.Success)
+            var response = new ApiCommonResponse<TokensDto>
             {
-                return StatusCode(result.StatusCode, new { result.Data, result.Message });
-            }
-            return StatusCode(result.StatusCode, new { result.Message, result.ValidationErrors });
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost("Refresh-Token")]
@@ -62,11 +66,17 @@ namespace EmployeeManagementSystem.Web.Controllers
         {
             var newAccessToken = await _tokenService.RefreshAccessToken(tokenRefreshRequestDto.RefreshToken);
 
-            if (newAccessToken == null)
+            var response = new ApiCommonResponse<object>
             {
-                return Unauthorized("Invalid or expired refresh token.");
-            }
-            return Ok(new { AccessToken = newAccessToken });
+                Success = newAccessToken != null,
+                StatusCode = newAccessToken != null ? StatusCodes.Status200OK : StatusCodes.Status401Unauthorized,
+                Message = newAccessToken != null ? "Token refreshed successfully." : "Invalid or expired refresh token.",
+                Data = newAccessToken != null ? new { AccessToken = newAccessToken } : null,
+                ValidationErrors = newAccessToken == null ? ["Invalid or expired refresh token."] : null
+            };
+
+            return StatusCode(response.StatusCode, response);
         }
+
     }
 }

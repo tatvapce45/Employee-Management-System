@@ -18,5 +18,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
         Task<ServiceResult<object>> GenerateEmployeesReport(int departnemtId,string? fromDate, string? toDate,string? gender,int? age);
 
         Task<ServiceResult<byte[]>> GenerateEmployeesReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age);
+
+        Task<ServiceResult<DepartmentsDto>> GetDepartments();
     }
 }

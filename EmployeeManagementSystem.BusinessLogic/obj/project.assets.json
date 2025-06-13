@@ -14864,11 +14864,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
+      "projectUniqueName": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
       "projectName": "EmployeeManagementSystem.BusinessLogic",
-      "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
+      "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
       "packagesPath": "C:\\Users\\pce45\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\obj\\",
+      "outputPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pce45\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -14883,8 +14883,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
-              "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
+            "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
+              "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
             }
           }
         }

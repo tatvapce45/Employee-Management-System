@@ -28,7 +28,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
 
             var userClaims = new List<Claim>
             {
-                new("userName", user.UserName),
+                new("userName", user.UserName!),
                 new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new(ClaimTypes.Role, user.Role.Name),
                 new("mail", user.Email),

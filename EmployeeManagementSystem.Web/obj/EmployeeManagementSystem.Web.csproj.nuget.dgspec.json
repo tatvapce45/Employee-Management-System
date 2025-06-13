@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj": {}
+    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj": {}
   },
   "projects": {
-    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj": {
+    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
+        "projectUniqueName": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
         "projectName": "EmployeeManagementSystem.BusinessLogic",
-        "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
+        "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj",
         "packagesPath": "C:\\Users\\pce45\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\obj\\",
+        "outputPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pce45\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -26,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
-                "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
+              "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
               }
             }
           }
@@ -115,14 +115,14 @@
         }
       }
     },
-    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
+    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
         "projectName": "EmployeeManagementSystem.DataAccess",
-        "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
+        "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj",
         "packagesPath": "C:\\Users\\pce45\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\obj\\",
+        "outputPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pce45\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -206,14 +206,14 @@
         }
       }
     },
-    "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj": {
+    "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj",
+        "projectUniqueName": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj",
         "projectName": "EmployeeManagementSystem.Web",
-        "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj",
+        "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\EmployeeManagementSystem.Web.csproj",
         "packagesPath": "C:\\Users\\pce45\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\obj\\",
+        "outputPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pce45\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -228,11 +228,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj": {
-                "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj"
+              "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj": {
+                "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.BusinessLogic\\EmployeeManagementSystem.BusinessLogic.csproj"
               },
-              "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
-                "projectPath": "c:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
+              "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj": {
+                "projectPath": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.DataAccess\\EmployeeManagementSystem.DataAccess.csproj"
               }
             }
           }
