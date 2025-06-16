@@ -3,6 +3,7 @@ using EmployeeManagementSystem.BusinessLogic.Services.Implementations;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using EmployeeManagementSystem.BusinessLogic.Common;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeManagementSystem.Web.Controllers
 {
@@ -64,19 +65,39 @@ namespace EmployeeManagementSystem.Web.Controllers
         [HttpPost("Refresh-Token")]
         public async Task<IActionResult> Refresh([FromBody] TokenRefreshRequestDto tokenRefreshRequestDto)
         {
-            var newAccessToken = await _tokenService.RefreshAccessToken(tokenRefreshRequestDto.RefreshToken);
+            var result = await _tokenService.RefreshAccessToken(tokenRefreshRequestDto.RefreshToken);
 
-            var response = new ApiCommonResponse<object>
+            TokenRefreshResponseDto? tokenRefreshResponseDto = null;
+
+            if (result != null && result.Success && result.Data is not null)
             {
-                Success = newAccessToken != null,
-                StatusCode = newAccessToken != null ? StatusCodes.Status200OK : StatusCodes.Status401Unauthorized,
-                Message = newAccessToken != null ? "Token refreshed successfully." : "Invalid or expired refresh token.",
-                Data = newAccessToken != null ? new { AccessToken = newAccessToken } : null,
-                ValidationErrors = newAccessToken == null ? ["Invalid or expired refresh token."] : null
+                TokenRefreshResponseDto tokenData = result.Data;
+
+                tokenRefreshResponseDto = new TokenRefreshResponseDto
+                {
+                    AccessToken = tokenData.AccessToken,
+                    RefreshToken = tokenData.RefreshToken
+                };
+            }
+
+            var response = new ApiCommonResponse<TokenRefreshResponseDto>
+            {
+                Success = tokenRefreshResponseDto != null,
+                StatusCode = tokenRefreshResponseDto != null ? StatusCodes.Status200OK : StatusCodes.Status401Unauthorized,
+                Message = tokenRefreshResponseDto != null ? "Token refreshed successfully." : "Invalid or expired refresh token.",
+                Data = tokenRefreshResponseDto,
+                ValidationErrors = tokenRefreshResponseDto == null ? ["Invalid or expired refresh token."] : null
             };
 
             return StatusCode(response.StatusCode, response);
         }
 
+
+        [Authorize]
+        [HttpGet("Validate-Token")]
+        public IActionResult ValidateToken()
+        {
+            return Ok(new { Success = true });
+        }
     }
 }

@@ -130,7 +130,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetDepartments")]
-        // [Authorize(Roles = "HR Manager,Admin")]
+        [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<DepartmentsDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDepartments()
         {

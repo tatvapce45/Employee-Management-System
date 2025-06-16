@@ -1,3 +1,4 @@
+using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Helpers;
 using EmployeeManagementSystem.BusinessLogic.Results;
 using EmployeeManagementSystem.DataAccess.Models;
@@ -5,7 +6,7 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository,IUsersRepository usersRepository)
+    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IUsersRepository usersRepository)
     {
         private readonly JwtTokenGeneratorHelper _jwtHelper = jwtHelper;
         private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository = refreshTokenGenericRepository;
@@ -37,31 +38,39 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             };
         }
 
-        public async Task<string?> RefreshAccessToken(string refreshToken)
+        public async Task<ServiceResult<TokenRefreshResponseDto>?> RefreshAccessToken(string refreshToken)
         {
             var token = await _refreshTokenRepository.GetRefreshtokenByToken(refreshToken);
 
             if (token == null || token.IsUsed || token.IsRevoked || token.Expires < DateTime.Now)
-            {
                 return null;
-            }
 
             token.IsUsed = true;
-            var result = await _refreshTokenGenericRepository.UpdateAsync(token);
-            if (!result.Success)
+            await _refreshTokenGenericRepository.UpdateAsync(token);
+
+            var user = await _usersRepository.GetUserByEmail(token.User.Email);
+            if (user == null)
+                return null;
+
+            var newAccessToken = _jwtHelper.GenerateJWT(user);
+
+            var newRefreshToken = new Refreshtoken
             {
-                throw new Exception($"Failed to update refresh token: {result.ErrorMessage}");
-            }
-            User? user=await _usersRepository.GetUserByEmail(token.User.Email);
-            if(user!=null)
+                Token = Guid.NewGuid().ToString(),
+                Expires = DateTime.Now.AddDays(7),
+                UserId = user.Id,
+                IsUsed = false,
+                IsRevoked = false
+            };
+
+            await _refreshTokenGenericRepository.AddAsync(newRefreshToken);
+
+            return new ServiceResult<TokenRefreshResponseDto>
             {
-                token.User = user;
-            }
-            else
-            {
-                throw new Exception("User not found for the provided refresh token.");
-            }
-            return _jwtHelper.GenerateJWT(token.User);
+                Success = true,
+                Data = new TokenRefreshResponseDto{ AccessToken = newAccessToken, RefreshToken = newRefreshToken.Token }
+            };
         }
+
     }
 }

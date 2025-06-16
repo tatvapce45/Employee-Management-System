@@ -32,6 +32,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     TotalPages = (int)Math.Ceiling((double)employees.Count / employeesRequestDto.PageSize),
                     SortBy = employeesRequestDto.SortBy,
                     SortOrder = employeesRequestDto.SortOrder,
+                    DepartmentId=employeesRequestDto.DepartmentId,
+                    LastEmployee=Math.Min(employeesRequestDto.PageNumber*employeesRequestDto.PageSize,employees.Count)
                 };
                 return ServiceResult<EmployeesResponseDto>.Ok(employeesResponseDto);
             }
