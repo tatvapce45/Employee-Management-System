@@ -23,6 +23,22 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public int Age { get; set; }
 
         public decimal Salary { get; set; }
+
+        public string DepartmentName{get;set;}=string.Empty;
+
+        public string Address { get; set; }=string.Empty;
+
+        public string Zipcode { get; set; }=string.Empty;
+
+        public string Password { get; set; }=string.Empty;
+
+        public int CountryId { get; set; }
+
+        public int StateId { get; set; }
+
+        public int CityId { get; set; }
+
+        public int RoleId { get; set; }
     }
 
     public class CreateEmployeeDto
@@ -47,6 +63,20 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         [Required]
         public decimal Salary { get; set; }
+
+        public string Address { get; set; }=string.Empty;
+
+        public string Zipcode { get; set; }=string.Empty;
+
+        public string Password { get; set; }=string.Empty;
+
+        public int CountryId { get; set; }
+
+        public int StateId { get; set; }
+
+        public int CityId { get; set; }
+
+        public int RoleId { get; set; }
     }
 
     public class UpdateEmployeeDto
@@ -73,5 +103,19 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         [Required]
         public decimal Salary { get; set; }
+
+        public string Address { get; set; }=string.Empty;
+
+        public string Zipcode { get; set; }=string.Empty;
+
+        public string Password { get; set; }=string.Empty;
+
+        public int CountryId { get; set; }
+
+        public int StateId { get; set; }
+
+        public int CityId { get; set; }
+
+        public int RoleId { get; set; }
     }
 }

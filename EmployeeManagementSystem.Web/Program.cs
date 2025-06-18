@@ -17,6 +17,7 @@ builder.Services.AddJwtTokenGeneratorHelper();
 builder.Services.AddMemoryCache();
 builder.Services.AddValidationServices();
 builder.Services.AddControllers();
+
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.WebHost.ConfigureKestrel(options =>
@@ -33,7 +34,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5287") 
+            builder.WithOrigins("http://localhost:5287")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();

@@ -27,6 +27,11 @@ namespace EmployeeManagementSystem.BusinessLogic
         {
             services.AddAutoMapper(typeof(EmployeeAutoMapper));
             services.AddAutoMapper(typeof(UsersAutoMapper)); 
+            services.AddAutoMapper(typeof(RolesAutoMapper)); 
+            services.AddAutoMapper(typeof(CountriesAutoMapper)); 
+            services.AddAutoMapper(typeof(StatesAutoMapper)); 
+            services.AddAutoMapper(typeof(CitiesAutoMapper)); 
+            services.AddAutoMapper(typeof(DepartmentAutoMapper)); 
             return services;
         }
     }

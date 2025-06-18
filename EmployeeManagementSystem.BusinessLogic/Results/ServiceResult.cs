@@ -55,5 +55,15 @@ namespace EmployeeManagementSystem.BusinessLogic.Results
                 Message = message,
                 Exception = ex
             };
+
+        public static ServiceResult<T> PartialSuccess(string message, T? data = default) =>
+        new()
+        {
+            Success = false,
+            StatusCode = 207,
+            Message = message,
+            Data = data
+        };
+
     }
 }

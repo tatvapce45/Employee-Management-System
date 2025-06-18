@@ -10,10 +10,14 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class AuthenticationService(IGenericRepository<User> genericUserRepository, IUsersRepository usersRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
+    public class AuthenticationService(IGenericRepository<User> genericUserRepository, IUsersRepository usersRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
     {
         private readonly IGenericRepository<User> _genericUserRepository = genericUserRepository;
         private readonly IUsersRepository _usersRepository = usersRepository;
+        private readonly IRolesRepository _rolesRepository=rolesRepository;
+        private readonly ICountriesRepository _countriesRepository=countriesRepository;
+        private readonly IStatesRepository _statesRepository=statesRepository;
+        private readonly ICitiesRepository _citiesRepository=citiesRepository;
         private readonly TokenService _tokenService = tokenService;
         private readonly IMapper _mapper = mapper;
         private readonly HashHelper _hashHelper = hashHelper;
@@ -99,6 +103,94 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 return ServiceResult<TokensDto>.Ok(tokensDto, "Login successful.");
             }
             return ServiceResult<TokensDto>.InternalError("Failed to generate tokens after OTP verification.");
+        }
+
+        public async Task<ServiceResult<RolesResponseDto>> GetRoles()
+        {
+            try
+            {
+                List<Role> roles=await _rolesRepository.GetRoles();
+                if(roles.Count==0)
+                {
+                    return ServiceResult<RolesResponseDto>.NotFound("Roles not found!");
+                }
+                List<RolesDto> rolesDtos=_mapper.Map<List<RolesDto>>(roles);
+                RolesResponseDto rolesResponseDto=new()
+                {
+                    RolesDtos=rolesDtos
+                };
+                return ServiceResult<RolesResponseDto>.Ok(rolesResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<RolesResponseDto>.InternalError("Unexpected error occurred.",ex);
+            }
+        }
+
+        public async Task<ServiceResult<CountriesResponseDto>> GetCountries()
+        {
+            try
+            {
+                List<Country> countries=await _countriesRepository.GetCountries();
+                if(countries.Count==0)
+                {
+                    return ServiceResult<CountriesResponseDto>.NotFound("Countries not found!");
+                }
+                List<CountriesDto> countriesDtos=_mapper.Map<List<CountriesDto>>(countries);
+                CountriesResponseDto countriesResponseDto=new()
+                {
+                    CountriesDtos=countriesDtos
+                };
+                return ServiceResult<CountriesResponseDto>.Ok(countriesResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<CountriesResponseDto>.InternalError("Unexpected error occurred.",ex);
+            }
+        }
+
+        public async Task<ServiceResult<StatesResponseDto>> GetStatesByCountryId(int countryId)
+        {
+            try
+            {
+                List<State> states=await _statesRepository.GetStatesbyCountryId(countryId);
+                if(states.Count==0)
+                {
+                    return ServiceResult<StatesResponseDto>.NotFound("states not found!");
+                }
+                List<StatesDto> statesDtos=_mapper.Map<List<StatesDto>>(states);
+                StatesResponseDto statesResponseDto=new()
+                {
+                    StatesDtos=statesDtos
+                };
+                return ServiceResult<StatesResponseDto>.Ok(statesResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<StatesResponseDto>.InternalError("Unexpected error occurred.",ex);
+            }
+        }
+
+        public async Task<ServiceResult<CitiesResponseDto>> GetCitiesByStateId(int stateId)
+        {
+            try
+            {
+                List<City> cities=await _citiesRepository.GetCitiesByStateId(stateId);
+                if(cities.Count==0)
+                {
+                    return ServiceResult<CitiesResponseDto>.NotFound("Cities not found!");
+                }
+                List<CitiesDto> citiesDtos=_mapper.Map<List<CitiesDto>>(cities);
+                CitiesResponseDto citiesResponseDto=new()
+                {
+                    CitiesDtos=citiesDtos
+                };
+                return ServiceResult<CitiesResponseDto>.Ok(citiesResponseDto);
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<CitiesResponseDto>.InternalError("Unexpected error occurred.",ex);
+            }
         }
     }
 }

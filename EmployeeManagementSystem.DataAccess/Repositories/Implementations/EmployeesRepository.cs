@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using EmployeeManagementSystem.DataAccess.Models;
 using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
+using EmployeeManagementSystem.DataAccess.Results;
 using Microsoft.EntityFrameworkCore;
 namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
 {
@@ -9,11 +10,12 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
         private readonly EmployeeManagementSystemContext _context = context;
         private readonly IGenericRepository<Employee> _genericRepository = genericRepository;
 
-        public async Task<List<Employee>> GetEmployeesAsync(int departmentId, int pageNumber, int pageSize, string sortBy, string sortOrder, string searchTerm)
+        public async Task<PagedResult<Employee>> GetEmployeesAsync(int departmentId,int pageNumber,int pageSize,string sortBy,string sortOrder,string searchTerm)
         {
             Expression<Func<Employee, bool>> filter = e => e.DepartmentId == departmentId;
-            return await _genericRepository.GetAsync(pageNumber, pageSize, sortBy, sortOrder, searchTerm, filter, e => e.Name, e => e.Department.Name, e => e.Id.ToString());
+            return await _genericRepository.GetAsync(pageNumber,pageSize,sortBy,sortOrder,searchTerm,filter,[e => e.Department],e => e.Name,e => e.Department.Name,e => e.Id.ToString());
         }
+
 
         public async Task<bool> CheckIfExists(string email, string mobileNo)
         {

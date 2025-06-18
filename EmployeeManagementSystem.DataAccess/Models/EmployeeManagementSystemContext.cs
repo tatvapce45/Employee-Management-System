@@ -32,6 +32,7 @@ public partial class EmployeeManagementSystemContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Host=localhost;Database=EmployeeManagementSystem;Username=postgres;password=Tatva@123");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,6 +78,9 @@ public partial class EmployeeManagementSystemContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
+            entity.Property(e => e.Description)
+                .HasColumnType("character varying")
+                .HasColumnName("description");
             entity.Property(e => e.Name)
                 .HasMaxLength(200)
                 .HasColumnName("name");
@@ -92,7 +96,12 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.ToTable("employees");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Address)
+                .HasMaxLength(1000)
+                .HasColumnName("address");
             entity.Property(e => e.Age).HasColumnName("age");
+            entity.Property(e => e.CityId).HasColumnName("city_id");
+            entity.Property(e => e.CountryId).HasColumnName("country_id");
             entity.Property(e => e.DepartmentId).HasColumnName("department_id");
             entity.Property(e => e.Email)
                 .HasMaxLength(50)
@@ -110,17 +119,45 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(60)
                 .HasColumnName("name");
+            entity.Property(e => e.Password)
+                .HasMaxLength(500)
+                .HasColumnName("password");
+            entity.Property(e => e.RoleId).HasColumnName("role_id");
             entity.Property(e => e.Salary)
                 .HasPrecision(10, 2)
                 .HasColumnName("salary");
+            entity.Property(e => e.StateId).HasColumnName("state_id");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");
+            entity.Property(e => e.Zipcode)
+                .HasMaxLength(6)
+                .HasColumnName("zipcode");
+
+            entity.HasOne(d => d.City).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.CityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("employees_city_id_fkey");
+
+            entity.HasOne(d => d.Country).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.CountryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("employees_country_id_fkey");
 
             entity.HasOne(d => d.Department).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.DepartmentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("employees_department_id_fkey");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("employees_role_id_fkey");
+
+            entity.HasOne(d => d.State).WithMany(p => p.Employees)
+                .HasForeignKey(d => d.StateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("employees_state_id_fkey");
         });
 
         modelBuilder.Entity<Refreshtoken>(entity =>

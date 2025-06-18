@@ -14,7 +14,17 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
 
         public async Task<List<Department>> GetAllDepartments()
         {
-            return await _context.Departments.ToListAsync();
+            return await _context.Departments.OrderBy(d=>d.CreatedAt).ToListAsync();
+        }
+
+        public async Task<bool> CheckIfExistsWithName(string name)
+        {
+            return await _context.Departments.AnyAsync(d =>d.Name==name);
+        }
+
+        public async Task<bool> CheckIfExistsWithNameAndDiffId(string name,int id)
+        {
+            return await _context.Departments.AnyAsync(d=>d.Name==name && d.Id!=id);
         }
     }
 }

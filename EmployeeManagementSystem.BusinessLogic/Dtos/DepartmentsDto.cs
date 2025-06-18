@@ -2,7 +2,7 @@ using EmployeeManagementSystem.DataAccess.Models;
 
 namespace EmployeeManagementSystem.BusinessLogic.Dtos
 {
-    public class DepartmentsDto
+    public class DepartmrentDto
     {
         public int Id { get; set; }
 
@@ -10,18 +10,21 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         public string Description { get; set; } = string.Empty;
 
-        public DateTime? CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+    }
 
-        public List<Department> Departments { get; set; }=[];
+    public class DepartmentsDto
+    {
+        public List<Department> Departments { get; set; } = [];
     }
 
     public class CreateDepartmentDto
     {
         public required string Name { get; set; }
 
-        public required string Description { get; set; }
+        public string? Description { get; set; }
     }
 
     public class UpdateDepartmentDto
@@ -30,6 +33,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         public required string Name { get; set; }
 
-        public required string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

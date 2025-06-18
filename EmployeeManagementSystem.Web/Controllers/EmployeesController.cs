@@ -34,7 +34,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetEmployeeById")]
-        [Authorize]
+        // [Authorize]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetEmployee(int employeeId)
         {
@@ -70,7 +70,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPatch("UpdateEmployee")]
-        [Authorize(Roles = "HR Manager,Admin")]
+        // [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDto updateEmployeeDto)
         {
@@ -146,5 +146,92 @@ namespace EmployeeManagementSystem.Web.Controllers
 
             return StatusCode(response.StatusCode, response);
         }
+
+        [HttpGet("GetDepartmentById")]
+        // [Authorize]
+        [ProducesResponseType(typeof(ApiCommonResponse<DepartmrentDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDepartment([FromQuery] int departmentId)
+        {
+            var result = await _employeeService.GetDepartment(departmentId);
+            var response = new ApiCommonResponse<DepartmrentDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPost("CreateDepartment")]
+        // [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(ApiCommonResponse<DepartmrentDto>), StatusCodes.Status201Created)]
+        public async Task<IActionResult> AddDepartment([FromBody] CreateDepartmentDto createDepartmentDto)
+        {
+            var result = await _employeeService.AddDepartment(createDepartmentDto);
+            var response = new ApiCommonResponse<DepartmrentDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpPatch("UpdateDepartment")]
+        // [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(ApiCommonResponse<DepartmrentDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateDepartment([FromBody] UpdateDepartmentDto updateDepartmentDto)
+        {
+            var result = await _employeeService.UpdateDepartment(updateDepartmentDto);
+            var response = new ApiCommonResponse<DepartmrentDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("DeleteDepartment")]
+        // [Authorize(Roles = "HR Manager,Admin")]
+        [ProducesResponseType(typeof(ApiCommonResponse<string>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> DeleteDepartment(int departmentId)
+        {
+            var result = await _employeeService.DeleteDepartment(departmentId);
+            var response = new ApiCommonResponse<string>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? "Department deleted successfully." : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpDelete("DeleteMultipleEmployees")]
+        public async Task<IActionResult> DeleteMultipleEmployees([FromBody] int[] employeeIds)
+        {
+            var result = await _employeeService.DeleteMultipleEmployees(employeeIds);
+            var response = new ApiCommonResponse<string>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message,
+                Data = null
+            };
+            return StatusCode(response.StatusCode,response);
+        }
+
     }
 }

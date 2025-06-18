@@ -15,10 +15,20 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
 
         Task<ServiceResult<EmployeeDto>> DeleteEmployee(int employeeId);
 
+        Task<ServiceResult<string>> DeleteMultipleEmployees(int[] employeeIds);
+
         Task<ServiceResult<object>> GenerateEmployeesReport(int departnemtId,string? fromDate, string? toDate,string? gender,int? age);
 
         Task<ServiceResult<byte[]>> GenerateEmployeesReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age);
 
         Task<ServiceResult<DepartmentsDto>> GetDepartments();
+
+        Task<ServiceResult<DepartmrentDto>> GetDepartment(int departmentId);
+
+        Task<ServiceResult<DepartmrentDto>> AddDepartment(CreateDepartmentDto createDepartmentDto);
+
+        Task<ServiceResult<DepartmrentDto>> UpdateDepartment(UpdateDepartmentDto updateDepartmentDto);
+
+        Task<ServiceResult<DepartmrentDto>> DeleteDepartment(int departmentId);
     }
 }

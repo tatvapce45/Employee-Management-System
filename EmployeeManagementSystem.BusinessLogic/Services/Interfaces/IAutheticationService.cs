@@ -10,5 +10,13 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
         Task<ServiceResult<string>> Login(UserLoginDto userLoginDto);
 
         Task<ServiceResult<TokensDto>> VerifyOtp(string email, string submittedOtp);
+
+        Task<ServiceResult<RolesResponseDto>> GetRoles();
+
+        Task<ServiceResult<CountriesResponseDto>> GetCountries();
+
+        Task<ServiceResult<StatesResponseDto>> GetStatesByCountryId(int countryId);
+
+        Task<ServiceResult<CitiesResponseDto>> GetCitiesByStateId(int stateId);
     }
 }

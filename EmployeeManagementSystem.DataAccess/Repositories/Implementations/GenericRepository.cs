@@ -46,9 +46,18 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
             return result;
         }
 
-        public async Task<List<T>> GetAsync(int pageNumber, int pageSize, string sortBy, string sortOrder, string searchTerm, Expression<Func<T, bool>>? filter = null, params Expression<Func<T, string>>[] searchProperties)
+        public async Task<PagedResult<T>> GetAsync(int pageNumber, int pageSize, string sortBy, string sortOrder, string searchTerm, Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>[]? includes = null, params Expression<Func<T, string>>[] searchProperties)
         {
             IQueryable<T> query = filter != null ? _dbSet.Where(filter) : _dbSet.AsQueryable();
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
             if (!string.IsNullOrEmpty(searchTerm) && searchProperties != null && searchProperties.Length > 0)
             {
                 var lowerSearchTerm = searchTerm.ToLower();
@@ -111,9 +120,16 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
                     query = (IQueryable<T>)orderByMethod.Invoke(null, [query, lambda])!;
                 }
             }
-
+            int totalCount = await query.CountAsync();
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-            return await query.ToListAsync();
+            var items = await query.ToListAsync();
+
+            return new PagedResult<T>
+            {
+                Items = items,
+                TotalCount = totalCount
+            };
+
         }
 
         private static MemberExpression GetDefaultSortProperty(ParameterExpression parameter)

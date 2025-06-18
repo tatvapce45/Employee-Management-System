@@ -99,5 +99,69 @@ namespace EmployeeManagementSystem.Web.Controllers
         {
             return Ok(new { Success = true });
         }
+
+        [HttpGet("GetRoles")]
+        public async Task<IActionResult> GetRoles()
+        {
+            var result = await _authenticationService.GetRoles();
+            var response = new ApiCommonResponse<RolesResponseDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetCountries")]
+        public async Task<IActionResult> GetCountries()
+        {
+            var result = await _authenticationService.GetCountries();
+            var response = new ApiCommonResponse<CountriesResponseDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetStatesByCountryId")]
+        public async Task<IActionResult> GetStatesByCountryId([FromQuery]int countryId)
+        {
+            var result = await _authenticationService.GetStatesByCountryId(countryId);
+            var response = new ApiCommonResponse<StatesResponseDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetCitiesByStateId")]
+        public async Task<IActionResult> GetCitiesByStateId(int stateId)
+        {
+            var result = await _authenticationService.GetCitiesByStateId(stateId);
+            var response = new ApiCommonResponse<CitiesResponseDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

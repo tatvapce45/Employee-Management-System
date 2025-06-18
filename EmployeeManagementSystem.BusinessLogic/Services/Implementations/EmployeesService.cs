@@ -8,32 +8,34 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IMapper mapper) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, IMapper mapper) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
         private readonly IGenericRepository<Employee> _employeeGenericRepository = employeeGenericRepository;
+        private readonly IGenericRepository<Department> _departmentGenericRepository = departmentGenericRepository;
         private readonly IMapper _mapper = mapper;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
             try
             {
-                var employees = await _employeesRepository.GetEmployeesAsync(employeesRequestDto.DepartmentId, employeesRequestDto.PageNumber, employeesRequestDto.PageSize, employeesRequestDto.SortBy, employeesRequestDto.SortOrder, employeesRequestDto.SearchTerm);
-                if (employees == null || employees.Count == 0)
+                var employeesData = await _employeesRepository.GetEmployeesAsync(employeesRequestDto.DepartmentId, employeesRequestDto.PageNumber, employeesRequestDto.PageSize, employeesRequestDto.SortBy, employeesRequestDto.SortOrder, employeesRequestDto.SearchTerm);
+                if (employeesData.Items == null || employeesData.TotalCount == 0)
                 {
                     return ServiceResult<EmployeesResponseDto>.NotFound("No employees found for the given criteria.");
                 }
+                List<EmployeeDto> employeeDtos = _mapper.Map<List<EmployeeDto>>(employeesData.Items);
                 var employeesResponseDto = new EmployeesResponseDto()
                 {
-                    Employees = employees,
-                    TotalEmployees = employees.Count,
+                    Employees = employeeDtos,
+                    TotalEmployees = employeesData.TotalCount,
                     CurrentPage = employeesRequestDto.PageNumber,
                     PageSize = employeesRequestDto.PageSize,
-                    TotalPages = (int)Math.Ceiling((double)employees.Count / employeesRequestDto.PageSize),
+                    TotalPages = (int)Math.Ceiling((double)employeesData.TotalCount / employeesRequestDto.PageSize),
                     SortBy = employeesRequestDto.SortBy,
                     SortOrder = employeesRequestDto.SortOrder,
-                    DepartmentId=employeesRequestDto.DepartmentId,
-                    LastEmployee=Math.Min(employeesRequestDto.PageNumber*employeesRequestDto.PageSize,employees.Count)
+                    DepartmentId = employeesRequestDto.DepartmentId,
+                    LastEmployee = Math.Min(employeesRequestDto.PageNumber * employeesRequestDto.PageSize, employeesData.TotalCount)
                 };
                 return ServiceResult<EmployeesResponseDto>.Ok(employeesResponseDto);
             }
@@ -182,6 +184,49 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             }
         }
 
+        public async Task<ServiceResult<string>> DeleteMultipleEmployees(int[] employeeIds)
+        {
+            try
+            {
+                if (employeeIds == null || employeeIds.Length == 0)
+                {
+                    return ServiceResult<string>.BadRequest("No employee IDs provided.");
+                }
+
+                var failedDeletions = new List<int>();
+
+                foreach (var id in employeeIds)
+                {
+                    var result = await _employeeGenericRepository.GetById(id);
+                    if (result.Data == null)
+                    {
+                        failedDeletions.Add(id);
+                        continue;
+                    }
+
+                    var deleteResult = await _employeeGenericRepository.DeleteAsync(result.Data);
+                    if (!deleteResult.Success)
+                    {
+                        failedDeletions.Add(id);
+                    }
+                }
+
+                if (failedDeletions.Count == 0)
+                {
+                    return ServiceResult<string>.Ok(null, "All selected employees deleted successfully.");
+                }
+                else
+                {
+                    string message = $"Some employees could not be deleted. Failed IDs: {string.Join(", ", failedDeletions)}";
+                    return ServiceResult<string>.PartialSuccess(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<string>.InternalError("An unexpected error occurred while deleting employees.", ex);
+            }
+        }
+
         public async Task<ServiceResult<object>> GenerateEmployeesReport(int departnemtId, string? fromDate, string? toDate, string? gender, int? age)
         {
             try
@@ -288,6 +333,133 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             catch (Exception ex)
             {
                 return ServiceResult<DepartmentsDto>.InternalError("An unexpected error occurred while fetching departments.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<DepartmrentDto>> GetDepartment(int departmentId)
+        {
+            try
+            {
+                var result = await _departmentGenericRepository.GetById(departmentId);
+                if (result.Success)
+                {
+                    if (result.Data != null)
+                    {
+                        var deaprtmentDto = _mapper.Map<DepartmrentDto>(result.Data);
+                        return ServiceResult<DepartmrentDto>.Ok(deaprtmentDto);
+                    }
+                    else
+                    {
+                        return ServiceResult<DepartmrentDto>.NotFound("Department with provided id not found!");
+                    }
+                }
+                else
+                {
+                    return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while fetching department.", new Exception(result.ErrorMessage));
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while fetching department.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<DepartmrentDto>> AddDepartment(CreateDepartmentDto createDepartmentDto)
+        {
+            try
+            {
+                bool ifDepartmentExists = await _departmentsRepository.CheckIfExistsWithName(createDepartmentDto.Name);
+                if (ifDepartmentExists)
+                {
+                    return ServiceResult<DepartmrentDto>.BadRequest("Department with provided name already exists!");
+                }
+                else
+                {
+                    var department = _mapper.Map<Department>(createDepartmentDto);
+
+                    var result = await _departmentGenericRepository.AddAsync(department);
+                    if (!result.Success)
+                    {
+                        return ServiceResult<DepartmrentDto>.InternalError($"Failed to add department: {result.ErrorMessage}");
+                    }
+
+                    var departmentDto = _mapper.Map<DepartmrentDto>(department);
+                    return ServiceResult<DepartmrentDto>.Created(null, "Department added successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred during adding department.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<DepartmrentDto>> UpdateDepartment(UpdateDepartmentDto updateDepartmentDto)
+        {
+            try
+            {
+                bool ifDepartmentExists = await _departmentsRepository.CheckIfExistsWithNameAndDiffId(updateDepartmentDto.Name, updateDepartmentDto.Id);
+                if (ifDepartmentExists)
+                {
+                    return ServiceResult<DepartmrentDto>.BadRequest("Department with provided name exists with different id!");
+                }
+                else
+                {
+                    var result = await _departmentGenericRepository.GetById(updateDepartmentDto.Id);
+                    if (!result.Success)
+                    {
+                        return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while fetching department.", new Exception(result.ErrorMessage));
+                    }
+
+                    if (result.Data == null)
+                    {
+                        return ServiceResult<DepartmrentDto>.BadRequest("Department not found!");
+                    }
+
+                    Department department = result.Data;
+                    _mapper.Map(updateDepartmentDto, department);
+                    department.UpdatedAt = DateTime.Now;
+
+                    var updateResult = await _departmentGenericRepository.UpdateAsync(department);
+                    if (!updateResult.Success)
+                    {
+                        return ServiceResult<DepartmrentDto>.InternalError("Error updating department", new Exception(updateResult.ErrorMessage));
+                    }
+
+                    DepartmrentDto departmrentDto = _mapper.Map<DepartmrentDto>(updateResult.Data);
+                    return ServiceResult<DepartmrentDto>.Ok(null, "Department updated successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while updating department.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<DepartmrentDto>> DeleteDepartment(int departmentId)
+        {
+            try
+            {
+                var result = await _departmentGenericRepository.GetById(departmentId);
+                if (result.Data == null)
+                {
+                    return ServiceResult<DepartmrentDto>.NotFound("Department with provided id not found!");
+                }
+                else
+                {
+                    var deleteResult = await _departmentGenericRepository.DeleteAsync(result.Data);
+                    if (deleteResult.Success)
+                    {
+                        return ServiceResult<DepartmrentDto>.Ok(null, "Department deleted successfully.");
+                    }
+                    else
+                    {
+                        return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while deleting department.", new Exception(deleteResult.ErrorMessage));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while deleting department.", ex);
             }
         }
     }

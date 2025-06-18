@@ -15,6 +15,10 @@ namespace EmployeeManagementSystem.DataAccess
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
             services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<IRolesRepository, RolesRepository>();
+            services.AddScoped<ICountriesRepository, CountriesRepository>();
+            services.AddScoped<IStatesRepository, StatesRepository>();
+            services.AddScoped<ICitiesRepository, CitiesRepository>();
             return services;
         }
 

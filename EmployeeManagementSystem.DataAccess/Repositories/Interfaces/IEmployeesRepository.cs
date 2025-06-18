@@ -1,10 +1,11 @@
 using EmployeeManagementSystem.DataAccess.Models;
+using EmployeeManagementSystem.DataAccess.Results;
 
 namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
 {
     public interface IEmployeesRepository
     {
-        Task<List<Employee>> GetEmployeesAsync(int departmentId,int pageNumber,int pageSize,string sortBy,string sortOrder,string searchTerm);
+        Task<PagedResult<Employee>> GetEmployeesAsync(int departmentId,int pageNumber,int pageSize,string sortBy,string sortOrder,string searchTerm);
 
         Task<bool> CheckIfExists(string email,string mobileNo);
 
