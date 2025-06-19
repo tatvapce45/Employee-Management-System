@@ -11,7 +11,7 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
         public async Task<Refreshtoken?> GetRefreshtokenByToken(string token)
         {
             return await _context.Refreshtokens
-                .Include(r => r.User)
+                .Include(r => r.Employee)
                 .FirstOrDefaultAsync(r => r.Token == token);
         }
     }

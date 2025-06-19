@@ -10,10 +10,12 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class AuthenticationService(IGenericRepository<User> genericUserRepository, IUsersRepository usersRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
+    public class AuthenticationService(IGenericRepository<User> genericUserRepository,IGenericRepository<Employee> genericEmployeeRepository, IUsersRepository usersRepository,IEmployeesRepository employeesRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
     {
         private readonly IGenericRepository<User> _genericUserRepository = genericUserRepository;
+        private readonly IGenericRepository<Employee> _genericEmployeeRepository = genericEmployeeRepository;
         private readonly IUsersRepository _usersRepository = usersRepository;
+        private readonly IEmployeesRepository _employeesRepository=employeesRepository;
         private readonly IRolesRepository _rolesRepository=rolesRepository;
         private readonly ICountriesRepository _countriesRepository=countriesRepository;
         private readonly IStatesRepository _statesRepository=statesRepository;
@@ -28,14 +30,14 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         {
             try
             {
-                User? existingUser = await _usersRepository.GetUserByEmail(userRegistrationDto.Email);
-                if (existingUser != null)
+                Employee? existingEmployee = await _employeesRepository.GetEmployeeByEmail(userRegistrationDto.Email);
+                if (existingEmployee != null)
                 {
                     return ServiceResult<UserRegistrationDto>.BadRequest("User with this email already exists.");
                 }
                 userRegistrationDto.Password = _hashHelper.Encrypt(userRegistrationDto.Password);
-                User user = _mapper.Map<User>(userRegistrationDto);
-                RepositoryResult<User> result = await _genericUserRepository.AddAsync(user);
+                Employee employee = _mapper.Map<Employee>(userRegistrationDto);
+                RepositoryResult<Employee> result = await _genericEmployeeRepository.AddAsync(employee);
                 if (!result.Success)
                 {
                     return ServiceResult<UserRegistrationDto>.InternalError($"Failed to register user: {result.ErrorMessage}");
@@ -52,7 +54,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         {
             try
             {
-                User? existingUser = await _usersRepository.GetUserByEmail(userLoginDto.Email);
+                Employee? existingUser = await _employeesRepository.GetEmployeeByEmail(userLoginDto.Email);
                 if (existingUser == null)
                 {
                     return ServiceResult<string>.NotFound("User with this email does not exist.");
@@ -84,12 +86,12 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             {
                 return ServiceResult<TokensDto>.BadRequest("Invalid OTP.");
             }
-            var user = await _usersRepository.GetUserByEmail(email);
-            if (user == null)
+            var employee = await _employeesRepository.GetEmployeeByEmail(email);
+            if (employee == null)
             {
                 return ServiceResult<TokensDto>.NotFound("User not found.");
             }
-            var tokens = await _tokenService.GenerateTokens(user);
+            var tokens = await _tokenService.GenerateTokens(employee);
             var accessToken = tokens.Data?.GetType().GetProperty("AccessToken")?.GetValue(tokens.Data, null)?.ToString();
             var refreshToken = tokens.Data?.GetType().GetProperty("RefreshToken")?.GetValue(tokens.Data, null)?.ToString();
             if (accessToken != null && refreshToken != null)

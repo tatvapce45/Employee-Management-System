@@ -21,17 +21,17 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
             return tokenEmail;
         }
 
-        public string GenerateJWT(User user, int expireMinutes = 15)
+        public string GenerateJWT(Employee employee, int expireMinutes = 15)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var userClaims = new List<Claim>
             {
-                new("userName", user.UserName!),
-                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new(ClaimTypes.Role, user.Role.Name),
-                new("mail", user.Email),
+                new("userName", employee.Name!),
+                new(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+                new(ClaimTypes.Role, employee.Role.Name),
+                new("mail", employee.Email),
             };
 
             var token = new JwtSecurityToken(

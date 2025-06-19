@@ -16,6 +16,8 @@ namespace EmployeeManagementSystem.BusinessLogic
             services.AddTransient<IValidator<TokenRefreshRequestDto>,TokenRefreshRequestDtoValidator>();
             services.AddTransient<IValidator<CreateDepartmentDto>, CreateDepartmentValidator>();
             services.AddTransient<IValidator<UpdateDepartmentDto>, UpdateDepartmentValidator>();
+            services.AddTransient<IValidator<UpdateProfileDto>, UpdateProfileDtoValidator>();
+            services.AddTransient<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
             return services;
         }
     }

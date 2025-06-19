@@ -9,7 +9,7 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
         private readonly EmployeeManagementSystemContext _context=context;
         public async Task<List<Role>> GetRoles()
         {
-            return await _context.Roles.Where(r=>r.Name!="Employee").ToListAsync();
+            return await _context.Roles.ToListAsync();
         }
     }
 }

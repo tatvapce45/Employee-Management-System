@@ -6,22 +6,23 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IUsersRepository usersRepository)
+    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IUsersRepository usersRepository, IEmployeesRepository employeesRepository)
     {
         private readonly JwtTokenGeneratorHelper _jwtHelper = jwtHelper;
         private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository = refreshTokenGenericRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
+        private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IUsersRepository _usersRepository = usersRepository;
 
-        public async Task<ServiceResult<object>> GenerateTokens(User user)
+        public async Task<ServiceResult<object>> GenerateTokens(Employee employee)
         {
-            var accessToken = _jwtHelper.GenerateJWT(user);
+            var accessToken = _jwtHelper.GenerateJWT(employee);
 
             var refreshToken = new Refreshtoken
             {
                 Token = Guid.NewGuid().ToString(),
                 Expires = DateTime.Now.AddDays(7),
-                UserId = user.Id,
+                EmployeeId = employee.Id,
                 IsUsed = false,
                 IsRevoked = false
             };
@@ -48,17 +49,19 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             token.IsUsed = true;
             await _refreshTokenGenericRepository.UpdateAsync(token);
 
-            var user = await _usersRepository.GetUserByEmail(token.User.Email);
-            if (user == null)
+            var employee = await _employeesRepository.GetEmployeeByEmail(token.Employee.Email);
+            if (employee == null)
+            {
                 return null;
+            }
 
-            var newAccessToken = _jwtHelper.GenerateJWT(user);
+            var newAccessToken = _jwtHelper.GenerateJWT(employee);
 
             var newRefreshToken = new Refreshtoken
             {
                 Token = Guid.NewGuid().ToString(),
                 Expires = DateTime.Now.AddDays(7),
-                UserId = user.Id,
+                EmployeeId = employee.Id,
                 IsUsed = false,
                 IsRevoked = false
             };
@@ -68,7 +71,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             return new ServiceResult<TokenRefreshResponseDto>
             {
                 Success = true,
-                Data = new TokenRefreshResponseDto{ AccessToken = newAccessToken, RefreshToken = newRefreshToken.Token }
+                Data = new TokenRefreshResponseDto { AccessToken = newAccessToken, RefreshToken = newRefreshToken.Token }
             };
         }
 

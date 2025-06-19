@@ -146,7 +146,6 @@ public partial class EmployeeManagementSystemContext : DbContext
 
             entity.HasOne(d => d.Department).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.DepartmentId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("employees_department_id_fkey");
 
             entity.HasOne(d => d.Role).WithMany(p => p.Employees)
@@ -167,6 +166,7 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.ToTable("refreshtoken");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
             entity.Property(e => e.Expires)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("expires");
@@ -175,12 +175,11 @@ public partial class EmployeeManagementSystemContext : DbContext
             entity.Property(e => e.Token)
                 .HasColumnType("character varying")
                 .HasColumnName("token");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.User).WithMany(p => p.Refreshtokens)
-                .HasForeignKey(d => d.UserId)
+            entity.HasOne(d => d.Employee).WithMany(p => p.Refreshtokens)
+                .HasForeignKey(d => d.EmployeeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("refreshtoken_user_id_fkey");
+                .HasConstraintName("refreshtoken_employee_id_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>

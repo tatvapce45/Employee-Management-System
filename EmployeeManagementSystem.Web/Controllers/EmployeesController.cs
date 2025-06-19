@@ -16,7 +16,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly IEmployeesService _employeeService = employeesService;
 
         [HttpPost("GetEmployees")]
-        // [Authorize(Roles = "HR Manager,Admin")]
+        [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<List<EmployeeDto>>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetEmployees([FromBody] EmployeesRequestDto employeesRequestDto)
         {
@@ -106,7 +106,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GenerateReport")]
-        [Authorize(Roles = "HR Manager,Admin")]
+        // [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(FileResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GenerateEmployeeReportExcel(int departmentId, string? fromDate, string? toDate, string? gender, int? age)
         {
@@ -130,7 +130,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetDepartments")]
-        [Authorize(Roles = "HR Manager,Admin")]
+        // [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<DepartmentsDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDepartments()
         {
@@ -227,7 +227,7 @@ namespace EmployeeManagementSystem.Web.Controllers
             {
                 Success = result.Success,
                 StatusCode = result.StatusCode,
-                Message = result.Message,
+                Message = result.Message!,
                 Data = null
             };
             return StatusCode(response.StatusCode,response);

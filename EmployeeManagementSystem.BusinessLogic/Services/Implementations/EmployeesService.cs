@@ -5,15 +5,17 @@ using EmployeeManagementSystem.BusinessLogic.Results;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using EmployeeManagementSystem.DataAccess.Models;
 using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
+using EmployeeManagementSystem.BusinessLogic.Helpers;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, IMapper mapper) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository,HashHelper hashHelper, IMapper mapper) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
         private readonly IGenericRepository<Employee> _employeeGenericRepository = employeeGenericRepository;
         private readonly IGenericRepository<Department> _departmentGenericRepository = departmentGenericRepository;
+        private readonly HashHelper _hashHelper = hashHelper;
         private readonly IMapper _mapper = mapper;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
@@ -460,6 +462,117 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             catch (Exception ex)
             {
                 return ServiceResult<DepartmrentDto>.InternalError("An unexpected error occurred while deleting department.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<UpdateProfileDto>> GetEmployeeForMyProfile(int employeeId)
+        {
+            try
+            {
+                var result = await _employeeGenericRepository.GetById(employeeId);
+                if (result.Success)
+                {
+                    if (result.Data != null)
+                    {
+                        var employeeDto = _mapper.Map<UpdateProfileDto>(result.Data);
+                        return ServiceResult<UpdateProfileDto>.Ok(employeeDto);
+                    }
+                    else
+                    {
+                        return ServiceResult<UpdateProfileDto>.NotFound("Employee with provided id not found!");
+                    }
+                }
+                else
+                {
+                    return ServiceResult<UpdateProfileDto>.InternalError("An unexpected error occurred while fetching employee.", new Exception(result.ErrorMessage));
+                }
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<UpdateProfileDto>.InternalError("An unexpected error occurred while fetching employee.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<EmployeeDto>> UpdateProfile(UpdateProfileDto updateProfileDto)
+        {
+            try
+            {
+
+                bool ifAlreadyExists = await _employeesRepository.CheckIfExistsWithDifferentId(updateProfileDto.Id, updateProfileDto.Email, updateProfileDto.MobileNo);
+                if (ifAlreadyExists)
+                {
+                    return ServiceResult<EmployeeDto>.BadRequest("User with same email or mobile number already exists!");
+                }
+
+                var result = await _employeeGenericRepository.GetById(updateProfileDto.Id);
+                if (!result.Success)
+                {
+                    return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while fetching User.", new Exception(result.ErrorMessage));
+                }
+
+                if (result.Data == null)
+                {
+                    return ServiceResult<EmployeeDto>.BadRequest("User not found!");
+                }
+
+                Employee employee = result.Data;
+                _mapper.Map(updateProfileDto, employee);
+                employee.UpdatedAt = DateTime.Now;
+
+                var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
+                if (!updateResult.Success)
+                {
+                    return ServiceResult<EmployeeDto>.InternalError("Error updating User", new Exception(updateResult.ErrorMessage));
+                }
+
+                EmployeeDto employeeDto = _mapper.Map<EmployeeDto>(updateResult.Data);
+                return ServiceResult<EmployeeDto>.Ok(null, "User updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred while updating User.", ex);
+            }
+        }
+
+        public async Task<ServiceResult<ChangePasswordDto>> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                var result = await _employeeGenericRepository.GetById(changePasswordDto.Id);
+                if (!result.Success)
+                {
+                    return ServiceResult<ChangePasswordDto>.InternalError("An unexpected error occurred while fetching User.", new Exception(result.ErrorMessage));
+                }
+
+                if (result.Data == null)
+                {
+                    return ServiceResult<ChangePasswordDto>.BadRequest("User not found!");
+                }
+
+                Employee employee = result.Data;
+                string correctPassword=_hashHelper.Decrypt(employee.Password);
+                if (correctPassword != changePasswordDto.CurrentPassword)
+                {
+                    return ServiceResult<ChangePasswordDto>.BadRequest("Provided current password is incorrect");
+                }
+                else if(correctPassword==changePasswordDto.NewPassword)
+                {
+                    return ServiceResult<ChangePasswordDto>.BadRequest("Old and new password cannot be same");
+                }
+                string encryptedNewPassword=_hashHelper.Encrypt(changePasswordDto.NewPassword);
+                employee.Password=encryptedNewPassword;
+                employee.UpdatedAt = DateTime.Now;
+
+                var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
+                if (!updateResult.Success)
+                {
+                    return ServiceResult<ChangePasswordDto>.InternalError("Error changing password", new Exception(updateResult.ErrorMessage));
+                }
+                return ServiceResult<ChangePasswordDto>.Ok(null, "Password updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<ChangePasswordDto>.InternalError("An unexpected error occurred while updating Password.", ex);
             }
         }
     }

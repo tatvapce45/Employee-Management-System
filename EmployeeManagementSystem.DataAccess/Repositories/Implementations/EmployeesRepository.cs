@@ -42,5 +42,16 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
                 .ToListAsync();
         }
 
+        public async Task<Employee?> GetEmployeeByEmail(string email)
+        {
+            return await _context.Employees.Include(u => u.Role).FirstOrDefaultAsync(h => h.Email == email);
+        }
+
+        public async Task<Employee?> GetEmployeeById(int id)
+        {
+            return await _context.Employees.Include(u => u.Role).FirstOrDefaultAsync(h => h.Id == id);
+        }
+
+
     }
 }

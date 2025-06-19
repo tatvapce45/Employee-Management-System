@@ -3,9 +3,9 @@ using EmployeeManagementSystem.BusinessLogic.Dtos;
 
 namespace EmployeeManagementSystem.BusinessLogic.DtoValidators
 {
-    public class UserRegistrationDtoValidator : AbstractValidator<UserRegistrationDto>
+    public class UpdateProfileDtoValidator : AbstractValidator<UpdateProfileDto>
     {
-        public UserRegistrationDtoValidator()
+        public UpdateProfileDtoValidator()
         {
             RuleFor(x => x.FirstName)
                 .NotEmpty().WithMessage("First Name field must not be null!")
@@ -35,12 +35,6 @@ namespace EmployeeManagementSystem.BusinessLogic.DtoValidators
             RuleFor(x => x.MobileNo)
                 .NotEmpty().WithMessage("Phone number is required.")
                 .Matches(@"^\d{10}$").WithMessage("Phone number must be exactly 10 digits with no characters.");
-
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("New Password field must not be null!")
-                .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
-                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$")
-                .WithMessage("Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.");
 
             RuleFor(x => x.CountryId)
                 .NotEmpty().WithMessage("Country field must not be null!")

@@ -12,5 +12,9 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
         Task<bool> CheckIfExistsWithDifferentId(int employeeId,string email,string mobileNo);
 
         Task<List<Employee>> GetEmployeesForReport(int departmentId,DateOnly? fromDate, DateOnly? toDate,string? gender,int? age);
+
+        Task<Employee?> GetEmployeeByEmail(string email);
+
+        Task<Employee?> GetEmployeeById(int id);
     }
 }

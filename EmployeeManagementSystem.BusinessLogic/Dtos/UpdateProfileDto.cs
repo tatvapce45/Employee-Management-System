@@ -2,8 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EmployeeManagementSystem.BusinessLogic.Dtos
 {
-    public class UserRegistrationDto
+    public class UpdateProfileDto
     {
+        public required int Id { get; set; }
+
         [Required]
         public required string FirstName { get; set; }
 

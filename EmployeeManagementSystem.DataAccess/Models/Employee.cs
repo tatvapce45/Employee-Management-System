@@ -13,7 +13,7 @@ public partial class Employee
 
     public DateTime? UpdatedAt { get; set; }
 
-    public int DepartmentId { get; set; }
+    public int? DepartmentId { get; set; }
 
     public string Email { get; set; } = null!;
 
@@ -43,7 +43,9 @@ public partial class Employee
 
     public virtual Country Country { get; set; } = null!;
 
-    public virtual Department Department { get; set; } = null!;
+    public virtual Department? Department { get; set; }
+
+    public virtual ICollection<Refreshtoken> Refreshtokens { get; set; } = new List<Refreshtoken>();
 
     public virtual Role Role { get; set; } = null!;
 

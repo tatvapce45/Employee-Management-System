@@ -30,5 +30,11 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Interfaces
         Task<ServiceResult<DepartmrentDto>> UpdateDepartment(UpdateDepartmentDto updateDepartmentDto);
 
         Task<ServiceResult<DepartmrentDto>> DeleteDepartment(int departmentId);
+
+        Task<ServiceResult<UpdateProfileDto>> GetEmployeeForMyProfile(int employeeId);
+
+        Task<ServiceResult<EmployeeDto>> UpdateProfile(UpdateProfileDto updateProfileDto);
+
+        Task<ServiceResult<ChangePasswordDto>> ChangePassword(ChangePasswordDto changePasswordDto);
     }
 }
