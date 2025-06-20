@@ -122,6 +122,7 @@ C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\b
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.IO.Pipelines.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.Management.dll
+C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.Reflection.MetadataLoadContext.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.Runtime.Caching.dll
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\System.Security.Cryptography.Pkcs.dll

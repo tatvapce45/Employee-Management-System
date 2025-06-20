@@ -1,5 +1,6 @@
 using System.Text;
 using EmployeeManagementSystem.BusinessLogic;
+using EmployeeManagementSystem.BusinessLogic.Helpers;
 using EmployeeManagementSystem.DataAccess;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +17,7 @@ builder.Services.AddDbContextConfiguration(builder.Configuration);
 builder.Services.AddJwtTokenGeneratorHelper();
 builder.Services.AddMemoryCache();
 builder.Services.AddValidationServices();
+builder.Services.AddSignalR();
 builder.Services.AddControllers();
 
 builder.Services.AddFluentValidationAutoValidation();
@@ -34,7 +36,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         builder =>
         {
-            builder.WithOrigins("http://localhost:5287")
+            builder.WithOrigins("http://localhost:5017")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials();
@@ -109,6 +111,7 @@ app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
 

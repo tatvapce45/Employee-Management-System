@@ -10,10 +10,10 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
         private readonly EmployeeManagementSystemContext _context = context;
         private readonly IGenericRepository<Employee> _genericRepository = genericRepository;
 
-        public async Task<PagedResult<Employee>> GetEmployeesAsync(int departmentId,int pageNumber,int pageSize,string sortBy,string sortOrder,string searchTerm)
+        public async Task<PagedResult<Employee>> GetEmployeesAsync(int departmentId, int pageNumber, int pageSize, string sortBy, string sortOrder, string searchTerm)
         {
             Expression<Func<Employee, bool>> filter = e => e.DepartmentId == departmentId;
-            return await _genericRepository.GetAsync(pageNumber,pageSize,sortBy,sortOrder,searchTerm,filter,[e => e.Department],e => e.Name,e => e.Department.Name,e => e.Id.ToString());
+            return await _genericRepository.GetAsync(pageNumber, pageSize, sortBy, sortOrder, searchTerm, filter, [e => e.Department], e => e.Name, e => e.Department.Name, e => e.Id.ToString());
         }
 
 
@@ -52,6 +52,14 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
             return await _context.Employees.Include(u => u.Role).FirstOrDefaultAsync(h => h.Id == id);
         }
 
+        public IQueryable<Employee> GetEmployeesDataForTime(DateTime from, DateTime to)
+        {
+            return _context.Employees.Where(e => e.HiringDate >= from && e.HiringDate <= to);
+        }
 
+        public IQueryable<Employee> GetAllEmployees()
+        {
+            return _context.Employees.Include(e=>e.Department);
+        }
     }
 }

@@ -3,6 +3,7 @@ using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using EmployeeManagementSystem.BusinessLogic.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using EmployeeManagementSystem.BusinessLogic.Services.Implementations;
 
 namespace EmployeeManagementSystem.Web.Controllers
 {
@@ -11,9 +12,10 @@ namespace EmployeeManagementSystem.Web.Controllers
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ApiController]
     [Route("api/[controller]")]
-    public class EmployeeController(IEmployeesService employeesService) : ControllerBase
+    public class EmployeeController(IEmployeesService employeesService, NotificationService notificationService) : ControllerBase
     {
         private readonly IEmployeesService _employeeService = employeesService;
+        private readonly NotificationService _notificationService = notificationService;
 
         [HttpPost("GetEmployees")]
         [Authorize(Roles = "HR Manager,Admin")]
@@ -230,8 +232,22 @@ namespace EmployeeManagementSystem.Web.Controllers
                 Message = result.Message!,
                 Data = null
             };
-            return StatusCode(response.StatusCode,response);
+            return StatusCode(response.StatusCode, response);
         }
 
+        [HttpPost("send-to-user")]
+        public async Task<IActionResult> SendToUser([FromBody] NotificationRequest request)
+        {
+            var result = await _notificationService.SendNotificationToUserAsync(request.Email, request.Message);
+
+            var response = new ApiCommonResponse<string>
+            {
+                Success = result,
+                StatusCode = 200,
+                Message = "notification sent",
+                Data = null
+            };
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

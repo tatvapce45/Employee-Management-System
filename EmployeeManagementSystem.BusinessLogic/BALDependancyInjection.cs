@@ -11,7 +11,9 @@ namespace EmployeeManagementSystem.BusinessLogic
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
+            services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<TokenService>();
+            services.AddScoped<NotificationService>();
             services.AddScoped<HashHelper>();
             services.AddScoped<EmailSender>();
             return services;

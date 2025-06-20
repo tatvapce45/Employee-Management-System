@@ -8,9 +8,10 @@ namespace EmployeeManagementSystem.Web.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HomeController(IEmployeesService employeeService) : ControllerBase
+    public class HomeController(IEmployeesService employeeService,IHomeService homeService) : ControllerBase
     {
-        private readonly IEmployeesService _employeeService=employeeService;
+        private readonly IEmployeesService _employeeService = employeeService;
+        private readonly IHomeService _homeService=homeService;
 
         [HttpGet("GetEmployeeToUpdateProfile")]
         // [Authorize]
@@ -55,6 +56,22 @@ namespace EmployeeManagementSystem.Web.Controllers
         {
             var result = await _employeeService.ChangePassword(changePasswordDto);
             var response = new ApiCommonResponse<ChangePasswordDto>
+            {
+                Success = result.Success,
+                StatusCode = result.StatusCode,
+                Message = result.Message!,
+                Data = result.Success ? result.Data : null,
+                ValidationErrors = result.ValidationErrors
+            };
+
+            return StatusCode(response.StatusCode, response);
+        }
+
+        [HttpGet("GetDashboardData")]
+        public async Task<IActionResult> GetDashboardData(int timeId = 1, string fromDate = "", string toDate = "")
+        {
+            var result = await _homeService.GetDashboardData(timeId,fromDate,toDate);
+            var response = new ApiCommonResponse<DashboardResponseDto>
             {
                 Success = result.Success,
                 StatusCode = result.StatusCode,

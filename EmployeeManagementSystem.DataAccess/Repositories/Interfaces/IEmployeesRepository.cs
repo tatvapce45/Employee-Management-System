@@ -16,5 +16,9 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
         Task<Employee?> GetEmployeeByEmail(string email);
 
         Task<Employee?> GetEmployeeById(int id);
+
+        IQueryable<Employee> GetEmployeesDataForTime(DateTime from,DateTime to);
+
+        IQueryable<Employee> GetAllEmployees();
     }
 }
