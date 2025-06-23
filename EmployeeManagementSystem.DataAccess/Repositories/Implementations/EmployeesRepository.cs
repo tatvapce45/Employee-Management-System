@@ -59,7 +59,12 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
 
         public IQueryable<Employee> GetAllEmployees()
         {
-            return _context.Employees.Include(e=>e.Department);
+            return _context.Employees.Include(e => e.Department).Include(e=>e.Country);
+        }
+
+        public async Task<List<Employee>> GetEmployeesByDepartmentId(int departmentId)
+        {
+            return await _context.Employees.Where(e => e.DepartmentId == departmentId).ToListAsync();
         }
     }
 }

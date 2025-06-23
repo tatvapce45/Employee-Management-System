@@ -15,6 +15,11 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly TokenService _tokenService = tokenService;
 
         [HttpPost("Register")]
+        /// <summary>
+        /// Registers a new user with the provided registration details.
+        /// </summary>
+        /// <param name="dto">The user registration information.</param>
+        /// <returns>Returns success if registration is successful; otherwise, returns error details.</returns>
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto dto)
         {
             var result = await _authenticationService.RegisterUser(dto);
@@ -31,6 +36,13 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Login")]
+        /// <summary>
+        /// Authenticates the user by email and password, then sends an OTP to the user's email for verification.
+        /// </summary>
+        /// <param name="userLoginDto">User login credentials (email and password).</param>
+        /// <returns>
+        /// Returns success message if OTP is sent; otherwise, returns error details.
+        /// </returns>
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             var result = await _authenticationService.Login(userLoginDto);
@@ -47,6 +59,12 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Verify-OTP")]
+        /// <summary>
+        /// Verifies the OTP sent to the user's email and returns authentication tokens upon success.
+        /// </summary>
+        /// <param name="email">The user's email address.</param>
+        /// <param name="otp">The one-time password to verify.</param>
+        /// <returns>Authentication tokens if OTP is valid; otherwise, an error response.</returns>
         public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
         {
             var result = await _authenticationService.VerifyOtp(email, otp);
@@ -63,6 +81,14 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Refresh-Token")]
+        /// <summary>
+        /// Refreshes the access token using a valid refresh token.
+        /// </summary>
+        /// <param name="tokenRefreshRequestDto">The refresh token request containing the refresh token string.</param>
+        /// <returns>
+        /// Returns new access and refresh tokens if the refresh token is valid; 
+        /// otherwise, returns an unauthorized response.
+        /// </returns>
         public async Task<IActionResult> Refresh([FromBody] TokenRefreshRequestDto tokenRefreshRequestDto)
         {
             var result = await _tokenService.RefreshAccessToken(tokenRefreshRequestDto.RefreshToken);
@@ -92,15 +118,23 @@ namespace EmployeeManagementSystem.Web.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
-
         [Authorize]
         [HttpGet("Validate-Token")]
+        /// <summary>
+        /// Validates the current user's authentication token.
+        /// </summary>
+        /// <returns>Returns success if the token is valid.</returns>
         public IActionResult ValidateToken()
         {
             return Ok(new { Success = true });
         }
 
+
         [HttpGet("GetRoles")]
+        /// <summary>
+        /// Retrieves a list of all roles.
+        /// </summary>
+        /// <returns>A list of roles.</returns>
         public async Task<IActionResult> GetRoles()
         {
             var result = await _authenticationService.GetRoles();
@@ -117,6 +151,10 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetCountries")]
+        /// <summary>
+        /// Retrieves a list of all countries.
+        /// </summary>
+        /// <returns>A list of countries.</returns>
         public async Task<IActionResult> GetCountries()
         {
             var result = await _authenticationService.GetCountries();
@@ -133,7 +171,12 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetStatesByCountryId")]
-        public async Task<IActionResult> GetStatesByCountryId([FromQuery]int countryId)
+        /// <summary>
+        /// Retrieves a list of states based on the provided country ID.
+        /// </summary>
+        /// <param name="countryId">The ID of the country.</param>
+        /// <returns>A list of states associated with the country.</returns>
+        public async Task<IActionResult> GetStatesByCountryId([FromQuery] int countryId)
         {
             var result = await _authenticationService.GetStatesByCountryId(countryId);
             var response = new ApiCommonResponse<StatesResponseDto>
@@ -149,6 +192,11 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetCitiesByStateId")]
+        /// <summary>
+        /// Retrieves a list of cities based on the provided state ID.
+        /// </summary>
+        /// <param name="stateId">The ID of the state.</param>
+        /// <returns>A list of cities associated with the state.</returns>
         public async Task<IActionResult> GetCitiesByStateId(int stateId)
         {
             var result = await _authenticationService.GetCitiesByStateId(stateId);

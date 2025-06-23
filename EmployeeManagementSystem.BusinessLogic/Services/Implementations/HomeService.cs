@@ -9,6 +9,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
     public class HomeService(IEmployeesRepository employeesRepository) : IHomeService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
+
         public async Task<ServiceResult<DashboardResponseDto>> GetDashboardData(int timeId, string fromDate, string toDate)
         {
             DateTime? from = null;
@@ -26,6 +27,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             Dictionary<string, int> timeWiseEmployees = [];
             Dictionary<string, int> departmentWiseEmployees = [];
             Dictionary<string, int> genderWiseEmployees = [];
+            Dictionary<string, int> countryWiseEmployees = [];
             Dictionary<int, int> ageWiseEmployees = [];
             if (timeId == 1)
             {
@@ -259,12 +261,28 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 ageWiseEmployees[eg.Age] = eg.Count;
             }
 
+            var countryWiseEmployeesFromDb = await _employeesRepository.GetAllEmployees()
+                .Where(e => !string.IsNullOrEmpty(e.Country!.Name))
+               .GroupBy(e => e.Country.Name)
+               .Select(g => new
+               {
+                   Country = g.Key!,
+                   Count = g.Count()
+               })
+               .ToListAsync();
+
+            foreach (var eg in countryWiseEmployeesFromDb)
+            {
+                countryWiseEmployees[eg.Country] = eg.Count;
+            }
+
             DashboardResponseDto dashboardResponseDto = new()
             {
                 TimeWiseEmployees = timeWiseEmployees,
                 DepartmentWiseEmployees = departmentWiseEmployees,
                 GenderWiseEmployees = genderWiseEmployees,
-                AgeWiseEmployees = ageWiseEmployees
+                AgeWiseEmployees = ageWiseEmployees,
+                CountryWiseEmployees = countryWiseEmployees
             };
             return ServiceResult<DashboardResponseDto>.Ok(dashboardResponseDto, "Here is the data.");
         }

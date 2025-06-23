@@ -20,5 +20,7 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
         IQueryable<Employee> GetEmployeesDataForTime(DateTime from,DateTime to);
 
         IQueryable<Employee> GetAllEmployees();
+
+        Task<List<Employee>> GetEmployeesByDepartmentId(int departmentId);
     }
 }

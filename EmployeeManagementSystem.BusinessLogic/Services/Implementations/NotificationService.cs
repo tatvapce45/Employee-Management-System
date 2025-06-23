@@ -30,7 +30,5 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 return false;
             }
         }
-
-
     }
 }

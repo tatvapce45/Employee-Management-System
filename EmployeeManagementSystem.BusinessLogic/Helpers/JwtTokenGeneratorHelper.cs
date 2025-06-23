@@ -38,7 +38,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: userClaims,
-                expires: DateTime.Now.AddMinutes(expireMinutes),
+                expires: DateTime.Now.AddHours(6),
                 signingCredentials: credentials
             );
 

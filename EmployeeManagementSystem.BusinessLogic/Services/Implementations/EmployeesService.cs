@@ -9,7 +9,7 @@ using EmployeeManagementSystem.BusinessLogic.Helpers;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository,HashHelper hashHelper, IMapper mapper) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, HashHelper hashHelper, IMapper mapper) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
@@ -448,6 +448,17 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 }
                 else
                 {
+                    var employees = await _employeesRepository.GetEmployeesByDepartmentId(departmentId);
+                    List<int> employeeIds=employees.Select(e=>e.Id).ToList();
+                    foreach (var id in employeeIds)
+                    {
+                        var resultEmployee = await _employeeGenericRepository.GetById(id);
+                        if (resultEmployee.Data == null)
+                        {
+                            continue;
+                        }
+                        var deleteEmployeeResult = await _employeeGenericRepository.DeleteAsync(resultEmployee.Data);
+                    }
                     var deleteResult = await _departmentGenericRepository.DeleteAsync(result.Data);
                     if (deleteResult.Success)
                     {
@@ -550,17 +561,17 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 }
 
                 Employee employee = result.Data;
-                string correctPassword=_hashHelper.Decrypt(employee.Password);
+                string correctPassword = _hashHelper.Decrypt(employee.Password);
                 if (correctPassword != changePasswordDto.CurrentPassword)
                 {
                     return ServiceResult<ChangePasswordDto>.BadRequest("Provided current password is incorrect");
                 }
-                else if(correctPassword==changePasswordDto.NewPassword)
+                else if (correctPassword == changePasswordDto.NewPassword)
                 {
                     return ServiceResult<ChangePasswordDto>.BadRequest("Old and new password cannot be same");
                 }
-                string encryptedNewPassword=_hashHelper.Encrypt(changePasswordDto.NewPassword);
-                employee.Password=encryptedNewPassword;
+                string encryptedNewPassword = _hashHelper.Encrypt(changePasswordDto.NewPassword);
+                employee.Password = encryptedNewPassword;
                 employee.UpdatedAt = DateTime.Now;
 
                 var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
