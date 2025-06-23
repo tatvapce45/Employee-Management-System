@@ -15,11 +15,6 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly TokenService _tokenService = tokenService;
 
         [HttpPost("Register")]
-        /// <summary>
-        /// Registers a new user with the provided registration details.
-        /// </summary>
-        /// <param name="dto">The user registration information.</param>
-        /// <returns>Returns success if registration is successful; otherwise, returns error details.</returns>
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto dto)
         {
             var result = await _authenticationService.RegisterUser(dto);
@@ -36,13 +31,6 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Login")]
-        /// <summary>
-        /// Authenticates the user by email and password, then sends an OTP to the user's email for verification.
-        /// </summary>
-        /// <param name="userLoginDto">User login credentials (email and password).</param>
-        /// <returns>
-        /// Returns success message if OTP is sent; otherwise, returns error details.
-        /// </returns>
         public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             var result = await _authenticationService.Login(userLoginDto);
@@ -59,12 +47,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Verify-OTP")]
-        /// <summary>
-        /// Verifies the OTP sent to the user's email and returns authentication tokens upon success.
-        /// </summary>
-        /// <param name="email">The user's email address.</param>
-        /// <param name="otp">The one-time password to verify.</param>
-        /// <returns>Authentication tokens if OTP is valid; otherwise, an error response.</returns>
+        
         public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
         {
             var result = await _authenticationService.VerifyOtp(email, otp);
@@ -88,7 +71,6 @@ namespace EmployeeManagementSystem.Web.Controllers
         /// <returns>
         /// Returns new access and refresh tokens if the refresh token is valid; 
         /// otherwise, returns an unauthorized response.
-        /// </returns>
         public async Task<IActionResult> Refresh([FromBody] TokenRefreshRequestDto tokenRefreshRequestDto)
         {
             var result = await _tokenService.RefreshAccessToken(tokenRefreshRequestDto.RefreshToken);
