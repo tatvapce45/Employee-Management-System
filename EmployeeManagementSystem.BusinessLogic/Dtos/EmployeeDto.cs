@@ -77,6 +77,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public int CityId { get; set; }
 
         public int RoleId { get; set; }
+
+        public string? EmailBody{get;set;}
     }
 
     public class UpdateEmployeeDto

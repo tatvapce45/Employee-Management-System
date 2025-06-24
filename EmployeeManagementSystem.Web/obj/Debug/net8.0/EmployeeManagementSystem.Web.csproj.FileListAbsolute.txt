@@ -1,5 +1,6 @@
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\appsettings.json
+C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\EmployeeManagementSystem.Web.staticwebassets.runtime.json
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\EmployeeManagementSystem.Web.exe
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\EmployeeManagementSystem.Web.deps.json
 C:\Users\pce45\Desktop\Employee Management System\EmployeeManagementSystem.Web\bin\Debug\net8.0\EmployeeManagementSystem.Web.runtimeconfig.json

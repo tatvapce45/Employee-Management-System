@@ -9,7 +9,7 @@ using EmployeeManagementSystem.BusinessLogic.Helpers;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, HashHelper hashHelper, IMapper mapper) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, HashHelper hashHelper, IMapper mapper,EmailSender emailSender) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
@@ -17,6 +17,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         private readonly IGenericRepository<Department> _departmentGenericRepository = departmentGenericRepository;
         private readonly HashHelper _hashHelper = hashHelper;
         private readonly IMapper _mapper = mapper;
+        private readonly EmailSender _emailSender=emailSender;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
             try
@@ -101,6 +102,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     }
 
                     var employeeDto = _mapper.Map<EmployeeDto>(employee);
+                    await _emailSender.SendAsync(createEmployeeDto.Email, "Welcome Email", "Welcome to our company", createEmployeeDto.EmailBody!);
                     return ServiceResult<EmployeeDto>.Created(null, "User registered successfully.");
                 }
             }

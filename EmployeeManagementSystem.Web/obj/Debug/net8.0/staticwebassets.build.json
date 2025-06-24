@@ -1,11 +1,39 @@
 {
   "Version": 1,
-  "Hash": "mwTRqgu7cEBhRrvdk3poWfCiZpCHXgUfLcPn4T6CR2o=",
+  "Hash": "UAF6jBAp83hlXKGo0McnByxRsImAPvLf9XZGL2oivwY=",
   "Source": "EmployeeManagementSystem.Web",
   "BasePath": "_content/EmployeeManagementSystem.Web",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "EmployeeManagementSystem.Web\\wwwroot",
+      "Source": "EmployeeManagementSystem.Web",
+      "ContentRoot": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\wwwroot\\",
+      "BasePath": "_content/EmployeeManagementSystem.Web",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\wwwroot\\rapi-doc.html",
+      "SourceId": "EmployeeManagementSystem.Web",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pce45\\Desktop\\Employee Management System\\EmployeeManagementSystem.Web\\wwwroot\\",
+      "BasePath": "_content/EmployeeManagementSystem.Web",
+      "RelativePath": "rapi-doc.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\rapi-doc.html"
+    }
+  ]
 }

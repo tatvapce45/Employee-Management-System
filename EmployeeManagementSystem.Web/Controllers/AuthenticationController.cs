@@ -47,7 +47,6 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("Verify-OTP")]
-        
         public async Task<IActionResult> VerifyOtp([FromQuery] string email, [FromQuery] string otp)
         {
             var result = await _authenticationService.VerifyOtp(email, otp);

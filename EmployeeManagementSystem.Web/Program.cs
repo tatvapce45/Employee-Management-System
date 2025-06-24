@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddRepositories();
@@ -30,7 +31,6 @@ builder.WebHost.ConfigureKestrel(options =>
     });
 });
 
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -42,6 +42,7 @@ builder.Services.AddCors(options =>
                    .AllowCredentials();
         });
 });
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -61,6 +62,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddAuthorization();
+
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
@@ -101,7 +103,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseStaticFiles(); 
+
+    app.MapFallbackToFile("/docs", "/rapi-doc.html"); 
 }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -110,9 +116,8 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
-
-// dotnet ef dbcontext scaffold "Host=localhost;Database=EmployeeManagementSystem;Username=postgres;password=Tatva@123" Npgsql.EntityFrameworkCore.PostgreSQL -o Models -f
