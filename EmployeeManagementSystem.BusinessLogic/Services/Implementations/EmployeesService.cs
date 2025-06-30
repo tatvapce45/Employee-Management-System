@@ -6,18 +6,20 @@ using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using EmployeeManagementSystem.DataAccess.Models;
 using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 using EmployeeManagementSystem.BusinessLogic.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository, HashHelper hashHelper, IMapper mapper,EmailSender emailSender) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository,ICloudinaryService cloudinaryService, HashHelper hashHelper, IMapper mapper, EmailSender emailSender) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
         private readonly IGenericRepository<Employee> _employeeGenericRepository = employeeGenericRepository;
         private readonly IGenericRepository<Department> _departmentGenericRepository = departmentGenericRepository;
+        private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
         private readonly HashHelper _hashHelper = hashHelper;
         private readonly IMapper _mapper = mapper;
-        private readonly EmailSender _emailSender=emailSender;
+        private readonly EmailSender _emailSender = emailSender;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
             try
@@ -85,32 +87,45 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 {
                     return ServiceResult<EmployeeDto>.BadRequest("Department with provided id does not exist!");
                 }
-                else
+
+                bool ifAlreadyExists = await _employeesRepository.CheckIfExists(createEmployeeDto.Email, createEmployeeDto.MobileNo);
+                if (ifAlreadyExists)
                 {
-                    bool ifAlreadyExists = await _employeesRepository.CheckIfExists(createEmployeeDto.Email, createEmployeeDto.MobileNo);
-                    if (ifAlreadyExists)
-                    {
-                        return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
-                    }
-
-                    var employee = _mapper.Map<Employee>(createEmployeeDto);
-
-                    var result = await _employeeGenericRepository.AddAsync(employee);
-                    if (!result.Success)
-                    {
-                        return ServiceResult<EmployeeDto>.InternalError($"Failed to register user: {result.ErrorMessage}");
-                    }
-
-                    var employeeDto = _mapper.Map<EmployeeDto>(employee);
-                    await _emailSender.SendAsync(createEmployeeDto.Email, "Welcome Email", "Welcome to our company", createEmployeeDto.EmailBody!);
-                    return ServiceResult<EmployeeDto>.Created(null, "User registered successfully.");
+                    return ServiceResult<EmployeeDto>.BadRequest("Employee with same email or mobile number already exists!");
                 }
+
+                var employee = _mapper.Map<Employee>(createEmployeeDto);
+
+                if (createEmployeeDto.ImageFile != null)
+                {
+                    var (imageUrl, publicId) = await _cloudinaryService.UploadImageAsync(createEmployeeDto.ImageFile);
+
+                    employee.ImageUrl = imageUrl;
+                    employee.CloudinaryPublicId = publicId;
+
+                    using var memoryStream = new MemoryStream();
+                    await createEmployeeDto.ImageFile.CopyToAsync(memoryStream);
+                    employee.Image = memoryStream.ToArray();
+                    employee.ImageMimeType = createEmployeeDto.ImageFile.ContentType;
+                }
+
+                var result = await _employeeGenericRepository.AddAsync(employee);
+                if (!result.Success)
+                {
+                    return ServiceResult<EmployeeDto>.InternalError($"Failed to register user: {result.ErrorMessage}");
+                }
+
+                var employeeDto = _mapper.Map<EmployeeDto>(employee);
+
+                await _emailSender.SendAsync(createEmployeeDto.Email, "Welcome Email", "Welcome to our company", createEmployeeDto.EmailBody!);
+                return ServiceResult<EmployeeDto>.Created(null, "User registered successfully.");
             }
             catch (Exception ex)
             {
                 return ServiceResult<EmployeeDto>.InternalError("An unexpected error occurred during adding employee.", ex);
             }
         }
+
 
         public async Task<ServiceResult<EmployeeDto>> UpdateEmployee(UpdateEmployeeDto updateEmployeeDto)
         {
@@ -143,6 +158,14 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     Employee employee = result.Data;
                     _mapper.Map(updateEmployeeDto, employee);
                     employee.UpdatedAt = DateTime.Now;
+                    using var memoryStream = new MemoryStream();
+                    if (updateEmployeeDto.ImageFile != null)
+                    {
+                        await updateEmployeeDto.ImageFile.CopyToAsync(memoryStream);
+
+                        employee.Image = memoryStream.ToArray();
+                        employee.ImageMimeType = updateEmployeeDto.ImageFile.ContentType;
+                    }
 
                     var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
                     if (!updateResult.Success)
@@ -451,7 +474,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 else
                 {
                     var employees = await _employeesRepository.GetEmployeesByDepartmentId(departmentId);
-                    List<int> employeeIds=employees.Select(e=>e.Id).ToList();
+                    List<int> employeeIds = employees.Select(e => e.Id).ToList();
                     foreach (var id in employeeIds)
                     {
                         var resultEmployee = await _employeeGenericRepository.GetById(id);

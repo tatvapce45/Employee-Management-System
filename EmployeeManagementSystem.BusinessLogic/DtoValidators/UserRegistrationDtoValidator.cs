@@ -15,10 +15,6 @@ namespace EmployeeManagementSystem.BusinessLogic.DtoValidators
                 .NotEmpty().WithMessage("Last Name field must not be null!")
                 .MaximumLength(30).WithMessage("Last Name field must not be longer than 30 characters!");
 
-            RuleFor(x => x.UserName)
-                .NotEmpty().WithMessage("Username field must not be null!")
-                .MaximumLength(50).WithMessage("Username field must not be longer than 50 characters!");
-
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email field must not be null!")
                 .EmailAddress().WithMessage("Please enter valid email address!")

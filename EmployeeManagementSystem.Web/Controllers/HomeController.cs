@@ -15,7 +15,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         private readonly IHomeService _homeService = homeService;
 
         [HttpGet("GetEmployeeToUpdateProfile")]
-        [Authorize]
+        // [Authorize]
         [ProducesResponseType(typeof(ApiCommonResponse<UpdateProfileDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiCommonResponse<UpdateProfileDto>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiCommonResponse<UpdateProfileDto>), StatusCodes.Status500InternalServerError)]
@@ -57,7 +57,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         /// Returns 400 Bad Request if validation fails or user is not found.
         /// Returns 500 Internal Server Error if an unexpected error occurs during the update.
         /// </returns>
-        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto updateProfileDto)
+        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDto updateProfileDto)
         {
             var result = await _employeeService.UpdateProfile(updateProfileDto);
             var response = new ApiCommonResponse<EmployeeDto>

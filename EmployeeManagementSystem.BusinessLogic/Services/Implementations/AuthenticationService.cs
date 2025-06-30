@@ -10,11 +10,9 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class AuthenticationService(IGenericRepository<User> genericUserRepository,IGenericRepository<Employee> genericEmployeeRepository, IUsersRepository usersRepository,IEmployeesRepository employeesRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
+    public class AuthenticationService(IGenericRepository<Employee> genericEmployeeRepository,IEmployeesRepository employeesRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
     {
-        private readonly IGenericRepository<User> _genericUserRepository = genericUserRepository;
         private readonly IGenericRepository<Employee> _genericEmployeeRepository = genericEmployeeRepository;
-        private readonly IUsersRepository _usersRepository = usersRepository;
         private readonly IEmployeesRepository _employeesRepository=employeesRepository;
         private readonly IRolesRepository _rolesRepository=rolesRepository;
         private readonly ICountriesRepository _countriesRepository=countriesRepository;
@@ -155,7 +153,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         {
             try
             {
-                List<State> states=await _statesRepository.GetStatesbyCountryId(countryId);
+                List<State1> states=await _statesRepository.GetStatesbyCountryId(countryId);
                 if(states.Count==0)
                 {
                     return ServiceResult<StatesResponseDto>.NotFound("states not found!");

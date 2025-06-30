@@ -7,9 +7,9 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
     public class StatesRepository(EmployeeManagementSystemContext context) : IStatesRepository
     {
         private readonly EmployeeManagementSystemContext _context=context;
-        public async Task<List<State>> GetStatesbyCountryId(int countryId)
+        public async Task<List<State1>> GetStatesbyCountryId(int countryId)
         {
-            return await _context.States.Where(s=>s.CountryId==countryId).ToListAsync();
+            return await _context.States1.Where(s=>s.CountryId==countryId).ToListAsync();
         }
     }
 }

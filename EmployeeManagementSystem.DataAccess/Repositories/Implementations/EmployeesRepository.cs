@@ -13,9 +13,8 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Implementations
         public async Task<PagedResult<Employee>> GetEmployeesAsync(int departmentId, int pageNumber, int pageSize, string sortBy, string sortOrder, string searchTerm)
         {
             Expression<Func<Employee, bool>> filter = e => e.DepartmentId == departmentId;
-            return await _genericRepository.GetAsync(pageNumber, pageSize, sortBy, sortOrder, searchTerm, filter, [e => e.Department], e => e.Name, e => e.Department.Name, e => e.Id.ToString());
+            return await _genericRepository.GetAsync(pageNumber, pageSize, sortBy, sortOrder, searchTerm, filter, [e => e.Department!], e => e.Name, e => e.Department!.Name, e => e.Id.ToString());
         }
-
 
         public async Task<bool> CheckIfExists(string email, string mobileNo)
         {

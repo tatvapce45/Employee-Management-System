@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace EmployeeManagementSystem.BusinessLogic.Dtos
 {
@@ -24,13 +25,13 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         public decimal Salary { get; set; }
 
-        public string DepartmentName{get;set;}=string.Empty;
+        public string DepartmentName { get; set; } = string.Empty;
 
-        public string Address { get; set; }=string.Empty;
+        public string Address { get; set; } = string.Empty;
 
-        public string Zipcode { get; set; }=string.Empty;
+        public string Zipcode { get; set; } = string.Empty;
 
-        public string Password { get; set; }=string.Empty;
+        public string Password { get; set; } = string.Empty;
 
         public int CountryId { get; set; }
 
@@ -39,6 +40,23 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public int CityId { get; set; }
 
         public int RoleId { get; set; }
+
+        public string? UserName { get; set; }
+
+        public IFormFile? ImageFile { get; set; }
+
+        public byte[]? Image { get; set; }
+
+        public string? ImageMimeType { get; set; }
+
+        public string? ImageBase64 =>
+            Image != null && !string.IsNullOrEmpty(ImageMimeType)
+                ? $"data:{ImageMimeType};base64,{Convert.ToBase64String(Image)}"
+                : null;
+
+        public string? ImageUrl { get; set; }  
+
+        public string? CloudinaryPublicId { get; set; }  
     }
 
     public class CreateEmployeeDto
@@ -64,11 +82,11 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         [Required]
         public decimal Salary { get; set; }
 
-        public string Address { get; set; }=string.Empty;
+        public string Address { get; set; } = string.Empty;
 
-        public string Zipcode { get; set; }=string.Empty;
+        public string Zipcode { get; set; } = string.Empty;
 
-        public string Password { get; set; }=string.Empty;
+        public string Password { get; set; } = string.Empty;
 
         public int CountryId { get; set; }
 
@@ -78,7 +96,11 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
 
         public int RoleId { get; set; }
 
-        public string? EmailBody{get;set;}
+        public string? EmailBody { get; set; }
+
+        public string? UserName { get; set; }
+
+        public IFormFile? ImageFile { get; set; }
     }
 
     public class UpdateEmployeeDto
@@ -106,11 +128,11 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         [Required]
         public decimal Salary { get; set; }
 
-        public string Address { get; set; }=string.Empty;
+        public string Address { get; set; } = string.Empty;
 
-        public string Zipcode { get; set; }=string.Empty;
+        public string Zipcode { get; set; } = string.Empty;
 
-        public string Password { get; set; }=string.Empty;
+        public string Password { get; set; } = string.Empty;
 
         public int CountryId { get; set; }
 
@@ -119,5 +141,9 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public int CityId { get; set; }
 
         public int RoleId { get; set; }
+
+        public string? UserName { get; set; }
+
+        public IFormFile? ImageFile { get; set; }
     }
 }

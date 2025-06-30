@@ -11,7 +11,5 @@ public partial class Country
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
-    public virtual ICollection<State> States { get; set; } = new List<State>();
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<State1> State1s { get; set; } = new List<State1>();
 }

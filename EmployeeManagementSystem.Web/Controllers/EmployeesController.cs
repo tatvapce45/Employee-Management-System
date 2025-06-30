@@ -45,7 +45,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpGet("GetEmployeeById")]
-        [Authorize]
+        // [Authorize]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status500InternalServerError)]
@@ -72,7 +72,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPost("CreateEmployee")]
-        [Authorize(Roles = "HR Manager,Admin")]
+        // [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status500InternalServerError)]
@@ -83,7 +83,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         /// <returns>
         /// Returns the created employee details if successful; otherwise, returns validation or error information.
         /// </returns>
-        public async Task<IActionResult> AddEmployee([FromBody] CreateEmployeeDto createEmployeeDto)
+        public async Task<IActionResult> AddEmployee([FromForm] CreateEmployeeDto createEmployeeDto)
         {
             var result = await _employeeService.AddEmployee(createEmployeeDto);
             var response = new ApiCommonResponse<EmployeeDto>

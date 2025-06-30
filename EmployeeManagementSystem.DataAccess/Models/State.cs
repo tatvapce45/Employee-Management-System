@@ -5,17 +5,19 @@ namespace EmployeeManagementSystem.DataAccess.Models;
 
 public partial class State
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
+
+    public long Jobid { get; set; }
 
     public string Name { get; set; } = null!;
 
-    public int CountryId { get; set; }
+    public string? Reason { get; set; }
 
-    public virtual ICollection<City> Cities { get; set; } = new List<City>();
+    public DateTime Createdat { get; set; }
 
-    public virtual Country Country { get; set; } = null!;
+    public string? Data { get; set; }
 
-    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    public int Updatecount { get; set; }
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual Job Job { get; set; } = null!;
 }

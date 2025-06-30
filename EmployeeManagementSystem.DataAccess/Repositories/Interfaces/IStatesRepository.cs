@@ -4,6 +4,6 @@ namespace EmployeeManagementSystem.DataAccess.Repositories.Interfaces
 {
     public interface IStatesRepository
     {
-        Task<List<State>> GetStatesbyCountryId(int countryId);
+        Task<List<State1>> GetStatesbyCountryId(int countryId);
     }
 }

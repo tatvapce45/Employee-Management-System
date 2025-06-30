@@ -12,6 +12,8 @@ namespace EmployeeManagementSystem.BusinessLogic
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<IHomeService, HomeService>();
+            services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<TokenService>();
             services.AddScoped<NotificationService>();
             services.AddScoped<HashHelper>();
@@ -28,12 +30,12 @@ namespace EmployeeManagementSystem.BusinessLogic
         public static IServiceCollection AddAutoMappers(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(EmployeeAutoMapper));
-            services.AddAutoMapper(typeof(UsersAutoMapper)); 
             services.AddAutoMapper(typeof(RolesAutoMapper)); 
             services.AddAutoMapper(typeof(CountriesAutoMapper)); 
             services.AddAutoMapper(typeof(StatesAutoMapper)); 
             services.AddAutoMapper(typeof(CitiesAutoMapper)); 
             services.AddAutoMapper(typeof(DepartmentAutoMapper)); 
+            services.AddAutoMapper(typeof(AttendanceMapper)); 
             return services;
         }
     }

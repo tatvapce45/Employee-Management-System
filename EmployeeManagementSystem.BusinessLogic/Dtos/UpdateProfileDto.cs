@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace EmployeeManagementSystem.BusinessLogic.Dtos
 {
@@ -49,5 +50,16 @@ namespace EmployeeManagementSystem.BusinessLogic.Dtos
         public decimal Salary { get; set; }
 
         public int DepartmentId{get;set;}
+
+        public IFormFile? ImageFile { get; set; }
+
+        public byte[]? Image { get; set; }
+
+        public string? ImageMimeType { get; set; } 
+
+        public string? ImageBase64 =>
+            Image != null && !string.IsNullOrEmpty(ImageMimeType)
+                ? $"data:{ImageMimeType};base64,{Convert.ToBase64String(Image)}"
+                : null;
     }
 }

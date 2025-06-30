@@ -6,13 +6,12 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IUsersRepository usersRepository, IEmployeesRepository employeesRepository)
+    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IEmployeesRepository employeesRepository)
     {
         private readonly JwtTokenGeneratorHelper _jwtHelper = jwtHelper;
         private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository = refreshTokenGenericRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
-        private readonly IUsersRepository _usersRepository = usersRepository;
 
         public async Task<ServiceResult<object>> GenerateTokens(Employee employee)
         {

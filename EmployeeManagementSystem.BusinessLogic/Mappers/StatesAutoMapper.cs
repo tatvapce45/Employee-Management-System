@@ -8,7 +8,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Mappers
     {
         public StatesAutoMapper()
         {
-            CreateMap<State, StatesDto>();
+            CreateMap<State1, StatesDto>();
         }
     }
 }

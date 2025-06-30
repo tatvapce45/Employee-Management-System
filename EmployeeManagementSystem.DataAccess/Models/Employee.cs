@@ -39,15 +39,35 @@ public partial class Employee
 
     public string Password { get; set; } = null!;
 
+    public int? ReportsTo { get; set; }
+
+    public string? Position { get; set; }
+
+    public string? UserName { get; set; }
+
+    public byte[]? Image { get; set; }
+
+    public string? ImageMimeType { get; set; }
+
+    public string? ImageUrl { get; set; }
+
+    public string? CloudinaryPublicId { get; set; }
+
+    public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
+
     public virtual City City { get; set; } = null!;
 
     public virtual Country Country { get; set; } = null!;
 
     public virtual Department? Department { get; set; }
 
+    public virtual ICollection<Employee> InverseReportsToNavigation { get; set; } = new List<Employee>();
+
     public virtual ICollection<Refreshtoken> Refreshtokens { get; set; } = new List<Refreshtoken>();
+
+    public virtual Employee? ReportsToNavigation { get; set; }
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual State State { get; set; } = null!;
+    public virtual State1 State { get; set; } = null!;
 }

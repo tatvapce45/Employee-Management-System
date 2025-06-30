@@ -36,8 +36,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Mappers
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.Name.Split(new char[] { ' ' }, 2, StringSplitOptions.None)[0]))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.Name.Contains(' ')
     ? src.Name.Split(new char[] { ' ' }, 2, StringSplitOptions.None)[1]
-    : ""))
-                .ForMember(dest => dest.UserName, opt => opt.Ignore()); 
+    : ""));
 
         }
     }

@@ -25,7 +25,7 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 await _hubContext.Clients.Group(email).SendAsync("ReceiveNotification", message);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

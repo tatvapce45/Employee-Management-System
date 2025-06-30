@@ -11,7 +11,6 @@ namespace EmployeeManagementSystem.DataAccess
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped<IEmployeesRepository, EmployeesRepository>();
             services.AddScoped<IDepartmentsRepository, DepartmentsRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
@@ -19,6 +18,7 @@ namespace EmployeeManagementSystem.DataAccess
             services.AddScoped<ICountriesRepository, CountriesRepository>();
             services.AddScoped<IStatesRepository, StatesRepository>();
             services.AddScoped<ICitiesRepository, CitiesRepository>();
+            services.AddScoped<IAttendanceRepository, AttendanceRepository>();
             return services;
         }
 
