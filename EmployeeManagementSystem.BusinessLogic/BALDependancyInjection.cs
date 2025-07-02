@@ -14,16 +14,16 @@ namespace EmployeeManagementSystem.BusinessLogic
             services.AddScoped<IHomeService, HomeService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
-            services.AddScoped<TokenService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IHashHelper,HashHelper>();
             services.AddScoped<NotificationService>();
-            services.AddScoped<HashHelper>();
-            services.AddScoped<EmailSender>();
+            services.AddScoped<IEmailSender,EmailSender>();
             return services;
         }
 
         public static IServiceCollection AddJwtTokenGeneratorHelper(this IServiceCollection services)
         {
-            services.AddScoped<JwtTokenGeneratorHelper>();
+            services.AddScoped<IJwtTokenGeneratorHelper,JwtTokenGeneratorHelper>();
             return services;
         }
 

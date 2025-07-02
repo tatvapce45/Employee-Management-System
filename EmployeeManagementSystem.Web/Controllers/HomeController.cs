@@ -57,7 +57,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         /// Returns 400 Bad Request if validation fails or user is not found.
         /// Returns 500 Internal Server Error if an unexpected error occurs during the update.
         /// </returns>
-        public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDto updateProfileDto)
+        public async Task<IActionResult> UpdateProfile([FromForm]UpdateProfileDto updateProfileDto)
         {
             var result = await _employeeService.UpdateProfile(updateProfileDto);
             var response = new ApiCommonResponse<EmployeeDto>

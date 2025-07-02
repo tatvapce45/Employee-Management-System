@@ -10,7 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class AuthenticationService(IGenericRepository<Employee> genericEmployeeRepository,IEmployeesRepository employeesRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, TokenService tokenService, HashHelper hashHelper, EmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
+    public class AuthenticationService(IGenericRepository<Employee> genericEmployeeRepository,IEmployeesRepository employeesRepository,IRolesRepository rolesRepository,ICountriesRepository countriesRepository,IStatesRepository statesRepository,ICitiesRepository citiesRepository, ITokenService tokenService, IHashHelper hashHelper, IEmailSender emailSender, IMemoryCache memoryCache, IMapper mapper) : IAuthenticationService
     {
         private readonly IGenericRepository<Employee> _genericEmployeeRepository = genericEmployeeRepository;
         private readonly IEmployeesRepository _employeesRepository=employeesRepository;
@@ -18,11 +18,11 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
         private readonly ICountriesRepository _countriesRepository=countriesRepository;
         private readonly IStatesRepository _statesRepository=statesRepository;
         private readonly ICitiesRepository _citiesRepository=citiesRepository;
-        private readonly TokenService _tokenService = tokenService;
+        private readonly ITokenService _tokenService = tokenService;
         private readonly IMapper _mapper = mapper;
-        private readonly HashHelper _hashHelper = hashHelper;
+        private readonly IHashHelper _hashHelper = hashHelper;
         private readonly IMemoryCache _memoryCache = memoryCache;
-        private readonly EmailSender _emailSender = emailSender;
+        private readonly IEmailSender _emailSender = emailSender;
 
         public async Task<ServiceResult<UserRegistrationDto>> RegisterUser(UserRegistrationDto userRegistrationDto)
         {

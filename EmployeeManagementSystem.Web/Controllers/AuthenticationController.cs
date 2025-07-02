@@ -9,10 +9,10 @@ namespace EmployeeManagementSystem.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController(IAuthenticationService authenticationService, TokenService tokenService) : ControllerBase
+    public class AuthenticationController(IAuthenticationService authenticationService, ITokenService tokenService) : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService = authenticationService;
-        private readonly TokenService _tokenService = tokenService;
+        private readonly ITokenService _tokenService = tokenService;
 
         [HttpPost("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto dto)

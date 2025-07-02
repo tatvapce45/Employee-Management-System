@@ -99,7 +99,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         }
 
         [HttpPatch("UpdateEmployee")]
-        [Authorize(Roles = "HR Manager,Admin")]
+        // [Authorize(Roles = "HR Manager,Admin")]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiCommonResponse<EmployeeDto>), StatusCodes.Status500InternalServerError)]
@@ -110,7 +110,7 @@ namespace EmployeeManagementSystem.Web.Controllers
         /// <returns>
         /// Returns the updated employee details if successful; otherwise, returns validation or error information.
         /// </returns>
-        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeDto updateEmployeeDto)
+        public async Task<IActionResult> UpdateEmployee([FromForm]UpdateEmployeeDto updateEmployeeDto)
         {
             var result = await _employeeService.UpdateEmployee(updateEmployeeDto);
             var response = new ApiCommonResponse<EmployeeDto>

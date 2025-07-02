@@ -1,3 +1,4 @@
+using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
@@ -5,7 +6,7 @@ using MimeKit;
 
 namespace EmployeeManagementSystem.BusinessLogic.Helpers
 {
-    public class EmailSender(IConfiguration configuration)
+    public class EmailSender(IConfiguration configuration):IEmailSender
     {
         private readonly IConfiguration _configuration = configuration;
 

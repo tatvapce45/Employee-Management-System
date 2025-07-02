@@ -10,16 +10,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository,ICloudinaryService cloudinaryService, HashHelper hashHelper, IMapper mapper, EmailSender emailSender) : IEmployeesService
+    public class EmployeesService(IEmployeesRepository employeesRepository, IDepartmentsRepository departmentsRepository, IGenericRepository<Employee> employeeGenericRepository, IGenericRepository<Department> departmentGenericRepository,ICloudinaryService cloudinaryService, IHashHelper hashHelper, IMapper mapper, IEmailSender emailSender) : IEmployeesService
     {
         private readonly IEmployeesRepository _employeesRepository = employeesRepository;
         private readonly IDepartmentsRepository _departmentsRepository = departmentsRepository;
         private readonly IGenericRepository<Employee> _employeeGenericRepository = employeeGenericRepository;
         private readonly IGenericRepository<Department> _departmentGenericRepository = departmentGenericRepository;
         private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
-        private readonly HashHelper _hashHelper = hashHelper;
+        private readonly IHashHelper _hashHelper = hashHelper;
         private readonly IMapper _mapper = mapper;
-        private readonly EmailSender _emailSender = emailSender;
+        private readonly IEmailSender _emailSender = emailSender;
         public async Task<ServiceResult<EmployeesResponseDto>> GetEmployees(EmployeesRequestDto employeesRequestDto)
         {
             try
@@ -99,10 +99,8 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 if (createEmployeeDto.ImageFile != null)
                 {
                     var (imageUrl, publicId) = await _cloudinaryService.UploadImageAsync(createEmployeeDto.ImageFile);
-
                     employee.ImageUrl = imageUrl;
                     employee.CloudinaryPublicId = publicId;
-
                     using var memoryStream = new MemoryStream();
                     await createEmployeeDto.ImageFile.CopyToAsync(memoryStream);
                     employee.Image = memoryStream.ToArray();
@@ -554,7 +552,16 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                 Employee employee = result.Data;
                 _mapper.Map(updateProfileDto, employee);
                 employee.UpdatedAt = DateTime.Now;
-
+                if (updateProfileDto.ImageFile != null)
+                {
+                    var (imageUrl, publicId) = await _cloudinaryService.UploadImageAsync(updateProfileDto.ImageFile);
+                    employee.ImageUrl = imageUrl;
+                    employee.CloudinaryPublicId = publicId;
+                    using var memoryStream = new MemoryStream();
+                    await updateProfileDto.ImageFile.CopyToAsync(memoryStream);
+                    employee.Image = memoryStream.ToArray();
+                    employee.ImageMimeType = updateProfileDto.ImageFile.ContentType;
+                }
                 var updateResult = await _employeeGenericRepository.UpdateAsync(employee);
                 if (!updateResult.Success)
                 {

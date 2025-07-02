@@ -1,17 +1,25 @@
 using EmployeeManagementSystem.BusinessLogic.Dtos;
 using EmployeeManagementSystem.BusinessLogic.Helpers;
 using EmployeeManagementSystem.BusinessLogic.Results;
+using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using EmployeeManagementSystem.DataAccess.Models;
 using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class TokenService(JwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IEmployeesRepository employeesRepository)
+    public class TokenService:ITokenService
     {
-        private readonly JwtTokenGeneratorHelper _jwtHelper = jwtHelper;
-        private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository = refreshTokenGenericRepository;
-        private readonly IRefreshTokenRepository _refreshTokenRepository = refreshTokenRepository;
-        private readonly IEmployeesRepository _employeesRepository = employeesRepository;
+        private readonly IJwtTokenGeneratorHelper _jwtHelper;
+        private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository ;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly IEmployeesRepository _employeesRepository;
+        public TokenService(IJwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IEmployeesRepository employeesRepository)
+        {
+            _jwtHelper=jwtHelper;
+            _refreshTokenGenericRepository=refreshTokenGenericRepository;
+            _refreshTokenRepository=refreshTokenRepository;
+            _employeesRepository=employeesRepository;
+        }
 
         public async Task<ServiceResult<object>> GenerateTokens(Employee employee)
         {

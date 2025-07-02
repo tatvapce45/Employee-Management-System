@@ -4,9 +4,10 @@ using EmployeeManagementSystem.DataAccess.Models;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 namespace EmployeeManagementSystem.BusinessLogic.Helpers
 {
-    public class JwtTokenGeneratorHelper(IConfiguration configuration)
+    public class JwtTokenGeneratorHelper(IConfiguration configuration):IJwtTokenGeneratorHelper
     {
         private readonly IConfiguration _configuration = configuration;
 
@@ -25,11 +26,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-
-
-
-
             var userClaims = new List<Claim>
             {
                 new("userName", employee.Name!),

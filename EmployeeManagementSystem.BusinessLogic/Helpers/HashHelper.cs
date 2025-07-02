@@ -1,10 +1,11 @@
 using System.Security.Cryptography;
 using System.Text;
+using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace EmployeeManagementSystem.BusinessLogic.Helpers
 {
-    public class HashHelper
+    public class HashHelper:IHashHelper
     {
         private readonly byte[] _key;
         private readonly byte[] _iv;
