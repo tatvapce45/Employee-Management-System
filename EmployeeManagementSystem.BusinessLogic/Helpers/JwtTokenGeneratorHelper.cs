@@ -26,6 +26,10 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+
+
+
+
             var userClaims = new List<Claim>
             {
                 new("userName", employee.Name!),
