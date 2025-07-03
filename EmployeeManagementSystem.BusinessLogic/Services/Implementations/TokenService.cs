@@ -7,18 +7,18 @@ using EmployeeManagementSystem.DataAccess.Repositories.Interfaces;
 
 namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
 {
-    public class TokenService:ITokenService
+    public class TokenService : ITokenService
     {
         private readonly IJwtTokenGeneratorHelper _jwtHelper;
-        private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository ;
+        private readonly IGenericRepository<Refreshtoken> _refreshTokenGenericRepository;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly IEmployeesRepository _employeesRepository;
         public TokenService(IJwtTokenGeneratorHelper jwtHelper, IGenericRepository<Refreshtoken> refreshTokenGenericRepository, IRefreshTokenRepository refreshTokenRepository, IEmployeesRepository employeesRepository)
         {
-            _jwtHelper=jwtHelper;
-            _refreshTokenGenericRepository=refreshTokenGenericRepository;
-            _refreshTokenRepository=refreshTokenRepository;
-            _employeesRepository=employeesRepository;
+            _jwtHelper = jwtHelper;
+            _refreshTokenGenericRepository = refreshTokenGenericRepository;
+            _refreshTokenRepository = refreshTokenRepository;
+            _employeesRepository = employeesRepository;
         }
 
         public async Task<ServiceResult<object>> GenerateTokens(Employee employee)
@@ -51,7 +51,9 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             var token = await _refreshTokenRepository.GetRefreshtokenByToken(refreshToken);
 
             if (token == null || token.IsUsed || token.IsRevoked || token.Expires < DateTime.Now)
+            {
                 return null;
+            }
 
             token.IsUsed = true;
             await _refreshTokenGenericRepository.UpdateAsync(token);

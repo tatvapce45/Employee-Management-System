@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace EmployeeManagementSystem.BusinessLogic.Helpers
 {
-    public class HashHelper:IHashHelper
+    public class HashHelper : IHashHelper
     {
         private readonly byte[] _key;
         private readonly byte[] _iv;
@@ -18,7 +18,9 @@ namespace EmployeeManagementSystem.BusinessLogic.Helpers
             var ivString = configuration["HashGenerator:HashIV"];
 
             if (string.IsNullOrEmpty(keyString) || string.IsNullOrEmpty(ivString))
+            {
                 throw new ArgumentException("Encryption key and IV must be provided in configuration.");
+            }
 
             _key = Encoding.UTF8.GetBytes(keyString);
             _iv = Encoding.UTF8.GetBytes(ivString);
