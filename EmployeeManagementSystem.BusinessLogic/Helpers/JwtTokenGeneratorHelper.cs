@@ -3,8 +3,8 @@ using System.IdentityModel.Tokens.Jwt;
 using EmployeeManagementSystem.DataAccess.Models;
 using System.Text;
 using System.Security.Claims;
-using Microsoft.Extensions.Configuration;
 using EmployeeManagementSystem.BusinessLogic.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 namespace EmployeeManagementSystem.BusinessLogic.Helpers
 {
     public class JwtTokenGeneratorHelper(IConfiguration configuration):IJwtTokenGeneratorHelper

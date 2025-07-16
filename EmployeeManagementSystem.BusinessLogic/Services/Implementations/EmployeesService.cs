@@ -124,7 +124,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
             }
         }
 
-
         public async Task<ServiceResult<EmployeeDto>> UpdateEmployee(UpdateEmployeeDto updateEmployeeDto)
         {
             try
@@ -160,7 +159,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     if (updateEmployeeDto.ImageFile != null)
                     {
                         await updateEmployeeDto.ImageFile.CopyToAsync(memoryStream);
-
                         employee.Image = memoryStream.ToArray();
                         employee.ImageMimeType = updateEmployeeDto.ImageFile.ContentType;
                     }
@@ -170,7 +168,6 @@ namespace EmployeeManagementSystem.BusinessLogic.Services.Implementations
                     {
                         return ServiceResult<EmployeeDto>.InternalError("Error updating employee", new Exception(updateResult.ErrorMessage));
                     }
-
                     EmployeeDto employeeDto = _mapper.Map<EmployeeDto>(updateResult.Data);
                     return ServiceResult<EmployeeDto>.Ok(null, "Employee updated successfully.");
                 }
